@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:chocobi/screens/home.dart';
 import 'package:chocobi/screens/testCard.dart';
+import 'package:chocobi/screens/transaction.dart';
 
 class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(
-        children: <Widget>[
+        children: [
           Container(
             color: Color.fromARGB(255, 17, 80, 156),
-            height: 200,
+            height: MediaQuery.of(context).size.height/4,
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Row(
@@ -67,7 +68,7 @@ class Profile extends StatelessWidget {
             leading: Icon(Icons.exit_to_app),
             title: Text('Logout'),
             onTap: () {
-              Navigator.pop(context, true);
+              // Aksi untuk 'Logout'
             },
           ),
         ],
@@ -84,7 +85,7 @@ class Profile extends StatelessWidget {
                 IconButton(icon: Icon(Icons.home, size: 30), onPressed: () {
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => const Home()),
+                    MaterialPageRoute(builder: (context) => Home()),
                     ModalRoute.withName("/Profile"));
                 }),
                 Text('Home',style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)), 
@@ -94,7 +95,10 @@ class Profile extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(icon: Icon(Icons.swap_horiz, size: 30), onPressed: () {
-                  showDialog(context: context, builder: (context){return const TestCard();});
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => Transaction()),
+                    ModalRoute.withName("/Profile"));
                 } ),
                 Text('Transaction',style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)), 
               ],
@@ -117,7 +121,7 @@ class Profile extends StatelessWidget {
                                 title: Text("Insert Transaction"),
                                 actions: [
                                   TextButton(onPressed: (){}, child: Text("ADD", style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
-                                  TextButton(onPressed: (){Navigator.pop(context, true);}, child: Text("CANCEL", style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
+                                  TextButton(onPressed: (){}, child: Text("CANCEL", style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
                                 ],
                                 content: SizedBox(
                                   height: 400,
@@ -144,7 +148,7 @@ class Profile extends StatelessWidget {
                             );
                           });
                         }, child: Text("ADD",style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
-                        TextButton(onPressed: (){Navigator.pop(context, true);}, child: Text("CANCEL",style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),))
+                        TextButton(onPressed: (){}, child: Text("CANCEL",style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),))
                       ],
                     ),
                   );
