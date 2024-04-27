@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
 
 // setState untuk jumlah karakter (cek banyak karakter)
+// rencananya gini;
+// setStatenya nanti setiap kali onChanged di TextField
+// jadi dia setiap nambah/kurang karakter dideteksi
+// masih kurang hurufnya atau tak
+
+// terus untuk provider juga belum ngerti kali konsepnya
+// cuman pastinya kalau implementasinya full satu file
+// kalau kulihat di internet, jadi ku pending dulu
+
 class Login extends StatefulWidget {
   const Login({super.key});
 
