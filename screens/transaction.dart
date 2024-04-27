@@ -5,6 +5,7 @@ import 'package:chocobi/data/money.dart';
 import 'package:chocobi/screens/home.dart';
 import 'package:chocobi/screens/profile.dart';
 import 'package:chocobi/screens/testCard.dart';
+import 'package:intl/intl.dart';
 
 class Transaction extends StatefulWidget {
   const Transaction({super.key});
@@ -25,6 +26,11 @@ class _TransactionState extends State<Transaction> {
       "_selected": true
     }
   ];
+
+  String formatNumberWithThousandSeparator(num number) {
+    final formatter = NumberFormat('#,##0', 'id');
+    return formatter.format(number);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +118,7 @@ class _TransactionState extends State<Transaction> {
                                     children: [
                                       Container(
                                         width: 130,
-                                        child: Text("Rp ${all[position]['price']}", style: TextStyle(color: iconColor, fontSize: 20))
+                                        child: Text("Rp ${formatNumberWithThousandSeparator(all[position]['price'])}", style: TextStyle(color: iconColor, fontSize: 20), textAlign: TextAlign.right)
                                       ),
                                       Icon(iconData, color: iconColor, size: 40)
                                     ],
