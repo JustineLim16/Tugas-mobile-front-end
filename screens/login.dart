@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 
+// setState untuk jumlah karakter (cek banyak karakter)
 class Login extends StatelessWidget {
   const Login({super.key});
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text("Insert Transaction"),
+      title: Text("Log in to Chocobi"),
       actions: [
-        TextButton(onPressed: (){}, child: Text("ADD", style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
-        TextButton(onPressed: (){Navigator.pop(context, true);}, child: Text("CANCEL", style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
+        TextButton(onPressed: (){}, child: Text("Log in", style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
+        TextButton(onPressed: (){Navigator.pop(context, true);}, child: Text("Cancel", style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
       ],
       content: SizedBox(
         height: 400,
@@ -17,7 +18,7 @@ class Login extends StatelessWidget {
         child: Column(children: [
           TextField(
             decoration: InputDecoration(
-              hintText: "Masukkan Judul",
+              hintText: "Enter username",
               enabledBorder: OutlineInputBorder(),
               focusedBorder: OutlineInputBorder(),
             ),
@@ -27,10 +28,18 @@ class Login extends StatelessWidget {
           ),
           TextField(
             decoration: InputDecoration(
-              hintText: "Masukkan Jumlah",
+              hintText: "Enter password",
               enabledBorder: OutlineInputBorder(),
               focusedBorder: OutlineInputBorder(),),
-          )],),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextButton(
+            onPressed: (){},
+            child: Text('Forgot password?')
+          )],
+        ),
       ),
     );
   }

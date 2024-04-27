@@ -70,7 +70,7 @@ class _HomeScreenState extends State<Home> {
                                 title: Text("Insert Transaction"),
                                 actions: [
                                   TextButton(onPressed: (){}, child: Text("ADD", style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
-                                  TextButton(onPressed: (){}, child: Text("CANCEL", style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
+                                  TextButton(onPressed: (){Navigator.pop(context, true);}, child: Text("CANCEL", style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
                                 ],
                                 content: SizedBox(
                                   height: 400,
@@ -97,7 +97,7 @@ class _HomeScreenState extends State<Home> {
                             );
                           });
                         }, child: Text("ADD",style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
-                        TextButton(onPressed: (){}, child: Text("CANCEL",style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),))
+                        TextButton(onPressed: (){Navigator.pop(context, true);}, child: Text("CANCEL",style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),))
                       ],
                     ),
                   );

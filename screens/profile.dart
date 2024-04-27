@@ -67,7 +67,7 @@ class Profile extends StatelessWidget {
             leading: Icon(Icons.exit_to_app),
             title: Text('Logout'),
             onTap: () {
-              // Aksi untuk 'Logout'
+              Navigator.pop(context, true);
             },
           ),
         ],
@@ -117,7 +117,7 @@ class Profile extends StatelessWidget {
                                 title: Text("Insert Transaction"),
                                 actions: [
                                   TextButton(onPressed: (){}, child: Text("ADD", style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
-                                  TextButton(onPressed: (){}, child: Text("CANCEL", style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
+                                  TextButton(onPressed: (){Navigator.pop(context, true);}, child: Text("CANCEL", style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
                                 ],
                                 content: SizedBox(
                                   height: 400,
@@ -144,7 +144,7 @@ class Profile extends StatelessWidget {
                             );
                           });
                         }, child: Text("ADD",style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
-                        TextButton(onPressed: (){}, child: Text("CANCEL",style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),))
+                        TextButton(onPressed: (){Navigator.pop(context, true);}, child: Text("CANCEL",style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),))
                       ],
                     ),
                   );
