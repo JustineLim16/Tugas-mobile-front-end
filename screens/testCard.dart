@@ -1,4 +1,3 @@
-// ignore_for_file: file_names
 import 'package:flutter/material.dart';
 
 class TestCard extends StatelessWidget {
@@ -7,7 +6,7 @@ class TestCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text(" To be implemented"),
+      title: Text('To be implemented'),
       actions: [
         SizedBox(
           height: 40,

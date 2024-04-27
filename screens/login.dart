@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
 
 // setState untuk jumlah karakter (cek banyak karakter)
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
   const Login({super.key});
 
   @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  final sampleUser = ['kenneths', 'lionggo'];
+
+  @override
   Widget build(BuildContext context) {
+    var status = "";
+
     return AlertDialog(
       title: Text("Log in to Chocobi"),
       actions: [
@@ -22,6 +31,11 @@ class Login extends StatelessWidget {
               enabledBorder: OutlineInputBorder(),
               focusedBorder: OutlineInputBorder(),
             ),
+            onChanged: (value) {
+                setState(() {
+                  status = value;
+                });
+            },
           ),
           SizedBox(
             height: 10,
@@ -30,7 +44,13 @@ class Login extends StatelessWidget {
             decoration: InputDecoration(
               hintText: "Enter password",
               enabledBorder: OutlineInputBorder(),
-              focusedBorder: OutlineInputBorder(),),
+              focusedBorder: OutlineInputBorder(),
+            ),
+            onChanged: (value) {
+              setState(() {
+                status = value;
+              });
+            }
           ),
           SizedBox(
             height: 10,
@@ -38,7 +58,11 @@ class Login extends StatelessWidget {
           TextButton(
             onPressed: (){},
             child: Text('Forgot password?')
-          )],
+          ),
+          SizedBox(
+            height: 80,
+          ),
+          Text(status)],
         ),
       ),
     );
