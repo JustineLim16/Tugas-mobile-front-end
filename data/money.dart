@@ -3,7 +3,7 @@ List<Map<String, dynamic>> all = [
     "category": "income",
     "description": "Transfer",
     "date": "2024-04-02",
-    "price": 500000
+    "price": 200000
   },
   {
     "category": "income",
@@ -33,7 +33,7 @@ List<Map<String, dynamic>> all = [
     "category": "income",
     "description": "Transfer",
     "date": "2024-04-02",
-    "price": 200000
+    "price": 500000
   },
   {
     "category": "expense",
@@ -68,14 +68,14 @@ List<Map<String, dynamic>> income = [
     "price": 200000
   },
   {
-    "description": "Transfer",
-    "date": "2024-04-02",
-    "price": 500000
-  },
-  {
     "description": "Saving",
     "date": "2024-04-02",
     "price": 2000000
+  },
+  {
+    "description": "Transfer",
+    "date": "2024-04-02",
+    "price": 500000
   },
   {
     "description": "Salary",
