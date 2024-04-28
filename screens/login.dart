@@ -1,14 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-
-// setState untuk jumlah karakter (cek banyak karakter)
-// rencananya gini;
-// setStatenya nanti setiap kali onChanged di TextField
-// jadi dia setiap nambah/kurang karakter dideteksi
-// masih kurang hurufnya atau tak
-
-// terus untuk provider juga belum ngerti kali konsepnya
-// cuman pastinya kalau implementasinya full satu file
-// kalau kulihat di internet, jadi ku pending dulu
+import 'package:chocobi/screens/profile.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -18,57 +11,114 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  final sampleUser = ['kenneths', 'lionggo'];
+  final username = TextEditingController();
+  final password = TextEditingController();
+  final sampleUser = ['adminkenneth', '1234567.'];
+  var status = "";
+  var buttonDisabled = false;
+  
+  void movingToNextScreen() {
+    Timer(
+      const Duration(seconds: 3),
+      () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Profile(),
+          ),
+        );
+      },
+    );
+  }
 
   @override
+  void dispose() {
+    username.dispose();
+    password.dispose();
+    super.dispose();
+  }
+  
+  @override
   Widget build(BuildContext context) {
-    var status = "";
-
     return AlertDialog(
-      title: Text("Log in to Chocobi"),
+      title: const Text("Log in to Chocobi"),
       actions: [
-        TextButton(onPressed: (){}, child: Text("Log in", style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
-        TextButton(onPressed: (){Navigator.pop(context, true);}, child: Text("Cancel", style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
+        TextButton(onPressed: buttonDisabled ? null : () {
+          if (sampleUser[0] == username.text && sampleUser[1] == password.text) {
+            setState((){
+              status = "Hello ${username.text}, you are being redirected..";
+              buttonDisabled = true;
+            });
+            movingToNextScreen();
+          }
+          else {
+            setState(() {
+              status = "Something's wrong. Please try again.";
+            });
+          } 
+        }, child: const Text("Log in", style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
+        TextButton(onPressed: buttonDisabled ? null : () {
+          Navigator.pop(context, true);
+        }, child: const Text("Cancel", style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
       ],
       content: SizedBox(
         height: 400,
         width: 350,
         child: Column(children: [
           TextField(
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: "Enter username",
               enabledBorder: OutlineInputBorder(),
               focusedBorder: OutlineInputBorder(),
             ),
+            controller: username,
             onChanged: (value) {
+              if (username.text.length < 8) {
                 setState(() {
-                  status = value;
+                  status = "Username is too short.";
                 });
-            },
+              }
+              else {
+                setState(() {
+                  status = "";
+                });
+              }
+            }
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           TextField(
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: "Enter password",
               enabledBorder: OutlineInputBorder(),
               focusedBorder: OutlineInputBorder(),
             ),
+            obscureText: true,
+            controller: password,
             onChanged: (value) {
-              setState(() {
-                status = value;
-              });
+              if (password.text.length < 8) {
+                setState(() {
+                  status = "Password is too short.";
+                });
+              }
+              else {
+                setState(() {
+                  status = "";
+                });
+              }
             }
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           TextButton(
-            onPressed: (){},
-            child: Text('Forgot password?')
+            onPressed: buttonDisabled ? null : () {
+              
+            },
+            child: const Text('Forgot password?')
           ),
-          SizedBox(
+          const SizedBox(
             height: 80,
           ),
           Text(status)],
