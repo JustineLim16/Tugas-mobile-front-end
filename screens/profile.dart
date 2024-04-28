@@ -1,9 +1,113 @@
+import 'dart:ui';
+import 'package:intl/intl.dart';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
+import 'package:chocobi/data/money.dart';
+
 import 'package:chocobi/screens/home.dart';
 import 'package:chocobi/screens/testCard.dart';
 import 'package:chocobi/screens/transaction.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
+  Profile ({super.key});
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _ProfileScreenState createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<Profile> {
+  num totalIncome = 0;
+  num totalExpense = 0;
+
+  String? _radioValue = "";
+
+  List<Map<String, dynamic>> all = [
+  {
+    "category": "income",
+    "description": "Transfer",
+    "date": "2024-04-02",
+    "price": 500000
+  },
+  {
+    "category": "income",
+    "description": "Saving",
+    "date": "2024-04-02",
+    "price": 2000000
+  },
+  {
+    "category": "expense",
+    "description": "Clothes",
+    "date": "2024-04-02",
+    "price": 1000000
+  },
+  {
+    "category": "expense",
+    "description": "Food",
+    "date": "2024-04-02",
+    "price": 200000
+  },
+  {
+    "category": "expense",
+    "description": "Transfer",
+    "date": "2024-04-02",
+    "price": 1000000
+  },
+  {
+    "category": "income",
+    "description": "Transfer",
+    "date": "2024-04-02",
+    "price": 200000
+  },
+  {
+    "category": "expense",
+    "description": "Food",
+    "date": "2024-04-01",
+    "price": 150000
+  },
+  {
+    "category": "expense",
+    "description": "Subscription",
+    "date": "2024-04-01",
+    "price": 500000
+  },
+  {
+    "category": "expense",
+    "description": "Subscription",
+    "date": "2024-04-01",
+    "price": 1000000
+  },
+  {
+    "category": "income",
+    "description": "Salary",
+    "date": "2024-04-01",
+    "price": 4500000
+  },
+];
+
+  @override
+  void initState() {
+    super.initState();
+    _calculateTotalPrice();
+  }
+
+  void _calculateTotalPrice() {
+    for (var item in income) {
+      totalIncome += item['price'];
+    }
+    for (var item in expense) {
+      totalExpense += item['price'];
+    }
+  }
+
+  String formatNumberWithThousandSeparator(num number) {
+    final formatter = NumberFormat('#,##0', 'id');
+    return formatter.format(number);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,57 +208,86 @@ class Profile extends StatelessWidget {
               ],
             ),
             FloatingActionButton(
-              backgroundColor: Color.fromARGB(255, 21, 96, 189),
-              child: Icon(Icons.add, color: Colors.white),
-              onPressed: () {
-                showDialog(context: context, builder: (context){
-                  return SizedBox(
-                    height: 400,
-                    child: AlertDialog(
-                      title: Text("Add Transaction ?"),
-                      actions: [
-                        TextButton(onPressed: (){
-                          showDialog(context: context, builder: (context){
-                            return SizedBox(
-                              height: 400,
-                              child: AlertDialog(
-                                title: Text("Insert Transaction"),
-                                actions: [
-                                  TextButton(onPressed: (){}, child: Text("ADD", style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
-                                  TextButton(onPressed: (){}, child: Text("CANCEL", style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
-                                ],
-                                content: SizedBox(
-                                  height: 400,
-                                  width: 350,
-                                  child: Column(children: [
-                                    TextField(
-                                      decoration: InputDecoration(
-                                        hintText: "Masukkan Judul",
-                                        enabledBorder: OutlineInputBorder(),
-                                        focusedBorder: OutlineInputBorder(),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    TextField(
-                                      decoration: InputDecoration(
-                                        hintText: "Masukkan Jumlah",
-                                        enabledBorder: OutlineInputBorder(),
-                                        focusedBorder: OutlineInputBorder(),),
-                                    )],),
-                                ),
-                              ),
-                            );
-                          });
-                        }, child: Text("ADD",style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
-                        TextButton(onPressed: (){}, child: Text("CANCEL",style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),))
+  backgroundColor: Color.fromARGB(255, 21, 96, 189),
+  child: Icon(Icons.add, color: Colors.white),
+  onPressed: () {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Add Transaction"),
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: ListTile(
+                            title: Text("Income"),
+                            leading: Radio<String>(
+                              value: "income",
+                              groupValue: _radioValue,
+                              onChanged: (String? value) {
+                                setState(() => _radioValue = value);
+                              },
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: ListTile(
+                            title: Text("Expense"),
+                            leading: Radio<String>(
+                              value: "expense",
+                              groupValue: _radioValue,
+                              onChanged: (String? value) {
+                                setState(() => _radioValue = value);
+                              },
+                            ),
+                          ),
+                        ),
                       ],
                     ),
-                  );
-                });
-              }, 
+                    TextField(
+                      decoration: InputDecoration(
+                        hintText: "Masukkan Judul",
+                        enabledBorder: OutlineInputBorder(),
+                        focusedBorder: OutlineInputBorder(),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    TextField(
+                      decoration: InputDecoration(
+                        hintText: "Masukkan Jumlah",
+                        enabledBorder: OutlineInputBorder(),
+                        focusedBorder: OutlineInputBorder(),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                // Logic to handle when "ADD" button is pressed
+              },
+              child: Text("ADD", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
             ),
+            TextButton(
+              onPressed: () => Navigator.pop(context), // Close the dialog when "CANCEL" button is pressed
+              child: Text("CANCEL", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+            ),
+          ],
+        );
+      },
+    );
+  },
+),
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
