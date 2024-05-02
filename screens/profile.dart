@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:chocobi/screens/welcome.dart';
 import 'package:intl/intl.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -10,6 +11,7 @@ import 'package:chocobi/data/money.dart';
 import 'package:chocobi/screens/home.dart';
 import 'package:chocobi/screens/testCard.dart';
 import 'package:chocobi/screens/transaction.dart';
+import 'package:chocobi/screens/settings.dart';
 
 class Profile extends StatefulWidget {
   Profile ({super.key});
@@ -158,6 +160,10 @@ class _ProfileScreenState extends State<Profile> {
             leading: Icon(Icons.settings),
             title: Text('Settings'),
             onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SettingsPage()),
+              );
               // Aksi untuk 'Settings'
             },
           ),
@@ -171,7 +177,12 @@ class _ProfileScreenState extends State<Profile> {
           ListTile(
             leading: Icon(Icons.exit_to_app),
             title: Text('Logout'),
-            onTap: () => Navigator.pop(context),
+            onTap: () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => Welcome()),
+                ModalRoute.withName("/Profile"));
+            },
           ),
         ],
       ),

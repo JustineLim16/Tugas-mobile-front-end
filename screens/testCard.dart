@@ -6,7 +6,7 @@ class TestCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('To be implemented'),
+      title: Text('Feature to be implemented', style:TextStyle(fontSize: 18),),
       actions: [
         SizedBox(
           height: 40,

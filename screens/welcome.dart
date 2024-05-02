@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:chocobi/screens/profile.dart';
+
 import 'package:chocobi/screens/login.dart';
+import 'package:chocobi/screens/signup.dart';
 
 class Welcome extends StatelessWidget {
   const Welcome({super.key});
@@ -31,7 +31,7 @@ class Welcome extends StatelessWidget {
                       width: 550,
                       child: ElevatedButton(
                         child: Text("Log in", style: TextStyle(color: Colors.black, fontFamily: 'Montserrat',fontSize: 20.0, fontWeight: FontWeight.w700),),
-                        onPressed: (){showDialog(context: context, builder: (context){return const Login();},);},
+                        onPressed: () {showDialog(context: context, builder: (context){return const Login();},);},
                         style: ElevatedButton.styleFrom(backgroundColor: Colors.white, fixedSize: Size(350, 65), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
                       ),
                     ),
@@ -40,7 +40,7 @@ class Welcome extends StatelessWidget {
                       width: 550,
                       child: ElevatedButton(
                         child: Text("Sign up", style: TextStyle(color: Colors.black, fontFamily: 'Montserrat',fontSize: 20.0, fontWeight: FontWeight.w700),),
-                        onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => Profile())),
+                        onPressed: () {showDialog(context: context, builder: (context){return const Signup();},);},
                         style: ElevatedButton.styleFrom(backgroundColor: Colors.white, fixedSize: Size(350, 65), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
                       ),
                     )

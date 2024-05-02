@@ -3,19 +3,22 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:chocobi/screens/profile.dart';
 
-class Login extends StatefulWidget {
-  const Login({super.key});
+class Signup extends StatefulWidget {
+  const Signup({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<Signup> createState() => _SignupState();
 }
 
-class _LoginState extends State<Login> {
+class _SignupState extends State<Signup> {
+  final email = TextEditingController();
   final username = TextEditingController();
   final password = TextEditingController();
-  final sampleUser = ['admin-chocobi', '1234567.'];
+
   var status = "";
   var buttonDisabled = false;
+
+  String? _radioValue = "";
   
   void movingToNextScreen() {
     Timer(
@@ -33,6 +36,7 @@ class _LoginState extends State<Login> {
 
   @override
   void dispose() {
+    email.dispose();
     username.dispose();
     password.dispose();
     super.dispose();
@@ -41,12 +45,12 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("Log in to Chocobi"),
+      title: const Text("Sign up to Chocobi"),
       actions: [
         TextButton(onPressed: buttonDisabled ? null : () {
-          if (sampleUser[0] == username.text && sampleUser[1] == password.text) {
+          if (username.text.length >= 8 && password.text.length >= 8 && email.text.contains("@")) {
             setState((){
-              status = "Hello ${username.text}, you are being redirected..";
+              status = "User ${username.text} registered, you are being redirected..";
               buttonDisabled = true;
             });
             movingToNextScreen();
@@ -56,7 +60,7 @@ class _LoginState extends State<Login> {
               status = "Something's wrong. Please try again.";
             });
           } 
-        }, child: const Text("Log in", style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
+        }, child: const Text("Sign up", style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
         TextButton(onPressed: buttonDisabled ? null : () {
           Navigator.pop(context, true);
         }, child: const Text("Cancel", style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
@@ -67,7 +71,30 @@ class _LoginState extends State<Login> {
         child: Column(children: [
           TextField(
             decoration: const InputDecoration(
-              hintText: "Enter username",
+              hintText: "Enter email",
+              enabledBorder: OutlineInputBorder(),
+              focusedBorder: OutlineInputBorder(),
+            ),
+            controller: email,
+            onChanged: (value) {
+              if (!email.text.contains("@")) {
+                setState(() {
+                  status = "This is not an email.";
+                });
+              }
+              else {
+                setState(() {
+                  status = "";
+                });
+              }
+            }
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          TextField(
+            decoration: const InputDecoration(
+              hintText: "Enter new username",
               enabledBorder: OutlineInputBorder(),
               focusedBorder: OutlineInputBorder(),
             ),
@@ -90,7 +117,7 @@ class _LoginState extends State<Login> {
           ),
           TextField(
             decoration: const InputDecoration(
-              hintText: "Enter password",
+              hintText: "Enter new password",
               enabledBorder: OutlineInputBorder(),
               focusedBorder: OutlineInputBorder(),
             ),
@@ -110,16 +137,40 @@ class _LoginState extends State<Login> {
             }
           ),
           const SizedBox(
-            height: 10,
+            height: 20,
           ),
-          TextButton(
-            onPressed: buttonDisabled ? null : () {
-              
-            },
-            child: const Text('Forgot password?')
+          Text('User Type'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: ListTile(
+                  title: Text("Normal"),
+                  leading: Radio<String>(
+                    value: "normal",
+                    groupValue: _radioValue,
+                    onChanged: (String? value) {
+                      setState(() => _radioValue = value);
+                    },
+                  ),
+                ),
+              ),
+              Expanded(
+                child: ListTile(
+                  title: Text("Admin"),
+                  leading: Radio<String>(
+                    value: "admin",
+                    groupValue: _radioValue,
+                    onChanged: (String? value) {
+                      setState(() => _radioValue = value);
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(
-            height: 80,
+            height: 60,
           ),
           Text(status)],
         ),
