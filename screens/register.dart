@@ -3,17 +3,17 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:chocobi/data/users.dart';
-import 'package:chocobi/screens/profile.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   final _usernameControl = TextEditingController();
+  final _emailControl = TextEditingController();
   final _passwordControl  = TextEditingController();
   String _statusText = '';
   bool _buttonDisabled = false;
@@ -28,7 +28,7 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Chocobi - Log In',
+            const Text('Chocobi - Register',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold
@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
             TextField(
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                hintText: 'Enter username'
+                hintText: 'Enter new username'
               ),
               controller: _usernameControl,
             ),
@@ -46,7 +46,15 @@ class _LoginPageState extends State<LoginPage> {
             TextField(
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                hintText: 'Enter password'
+                hintText: 'Enter registered email'
+              ),
+              controller: _emailControl,
+            ),
+            const SizedBox(height: 20),
+            TextField(
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'Enter new password'
               ),
               obscureText: true,
               controller: _passwordControl,
@@ -58,30 +66,34 @@ class _LoginPageState extends State<LoginPage> {
       ),
       actions: [
         TextButton(onPressed: _buttonDisabled ? null : () {
-          if (users.any((key) => key['username'] == _usernameControl.text
-              && key['password'] == _passwordControl.text)) {
+          if (_usernameControl.text.isNotEmpty
+              && _emailControl.text.isNotEmpty
+              && _passwordControl.text.isNotEmpty) {
+                users.addAll(
+                  [{
+                    "username": _usernameControl.text,
+                    "email": _emailControl.text,
+                    "password": _passwordControl.text,
+                    "profile" : "https://i.pinimg.com/736x/88/08/6b/88086b5e12f8a2146ea48e37070819fa.jpg"
+                  }]
+                );
                 setState(() {
-                  _statusText = 'Welcome back, you are being redirected..';
+                  _statusText = 'User registered, log in to start using Chocobi';
                   _buttonDisabled = true;
                 });
                 Timer(
                   const Duration(seconds: 3), () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Profile(),
-                      ),
-                    );
+                    Navigator.pop(context, true);
                   },
                 );
               } else {
                 setState(() {
-                  _statusText = 'Something\'s wrong, please try again';
+                  _statusText = 'Something\'s missing, please try again';
                 }
               );
             }
           },
-          child: const Text('Log In')
+          child: const Text('Register')
         ),
         TextButton(onPressed: _buttonDisabled ? null : () {
             Navigator.pop(context, true);
