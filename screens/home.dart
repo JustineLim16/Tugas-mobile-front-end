@@ -1,4 +1,7 @@
 import 'dart:ui';
+import 'package:chocobi/screens/clock.dart';
+import 'package:chocobi/screens/settings.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -9,6 +12,7 @@ import 'package:chocobi/data/money.dart';
 import 'package:chocobi/screens/profile.dart';
 import 'package:chocobi/screens/testCard.dart';
 import 'package:chocobi/screens/transaction.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   Home ({super.key});
@@ -19,6 +23,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<Home> {
+  List light = [Colors.white, Colors.black, Colors.grey[300]];
+  List dark = [Colors.black, Colors.white, Colors.grey[800]];
   num totalIncome = 0;
   num totalExpense = 0;
 
@@ -63,6 +69,7 @@ class _HomeScreenState extends State<Home> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            ClockWidget(),
                             Text("Hello, Shinchan", style: TextStyle(fontSize: 13, color: Colors.white)),
                             Text("Welcome Back", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white)),
                           ],
@@ -89,7 +96,7 @@ class _HomeScreenState extends State<Home> {
                       width: double.infinity, 
                       height: 100, 
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Provider.of<SettingsModel>(context).isDarkMode ? dark[0] : light[0],
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
@@ -123,7 +130,7 @@ class _HomeScreenState extends State<Home> {
                     child: Container(
                       height: double.infinity,
                       decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 249, 249, 249),
+                        color: Provider.of<SettingsModel>(context).isDarkMode ? dark[0] : light[0],
                         borderRadius: BorderRadius.only(topLeft: Radius.circular(50), topRight: Radius.circular(50)),
                       ),
                       child: Padding(
@@ -139,11 +146,13 @@ class _HomeScreenState extends State<Home> {
                                       Text("Recent Incomes", style: TextStyle(color: Colors.green, fontSize: 16, fontWeight: FontWeight.bold)),
                                       TextButton(onPressed: (){
                                         showDialog(context: context, builder: (context){return const TestCard();});
-                                      }, child: Text("View All", style: TextStyle(color: Colors.black)))
+                                      }, child: TextButton(onPressed: (){Navigator.pushAndRemoveUntil(
+                                        context,MaterialPageRoute(builder: (context) => Transaction(income_selected: true, expense_selected: false,)),
+                                        ModalRoute.withName("/Home"));}, child: Text("View All", style: TextStyle(color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1]))),)
                                     ],
                                   ),
                                   Container(
-                                    color: Colors.grey[200],
+                                    color: Provider.of<SettingsModel>(context).isDarkMode ? dark[2] : light[2],
                                     height: MediaQuery.of(context).size.height/17,
                                     child: Row(
                                       children: [
@@ -153,8 +162,8 @@ class _HomeScreenState extends State<Home> {
                                           child: Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text("Rp ${formatNumberWithThousandSeparator(income[0]['price'])}", style: TextStyle(fontSize: 17)),
-                                              Text("${income[0]["description"]}", style: TextStyle(fontSize: 15, color: Colors.grey[600]))
+                                              Text("Rp ${formatNumberWithThousandSeparator(income[0]['price'])}", style: TextStyle(fontSize: 17,color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1])),
+                                              Text("${income[0]["description"]}", style: TextStyle(fontSize: 15, color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : Colors.grey[600]))
                                             ],
                                           ),
                                         ),
@@ -163,7 +172,7 @@ class _HomeScreenState extends State<Home> {
                                   ),
                                   SizedBox(height: 15),
                                   Container(
-                                    color: Colors.grey[200],
+                                    color: Provider.of<SettingsModel>(context).isDarkMode ? dark[2] : light[2],
                                     height: MediaQuery.of(context).size.height/17,
                                     child: Row(
                                       children: [
@@ -173,8 +182,8 @@ class _HomeScreenState extends State<Home> {
                                           child: Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text("Rp ${formatNumberWithThousandSeparator(income[1]['price'])}", style: TextStyle(fontSize: 17)),
-                                              Text("${income[1]["description"]}", style: TextStyle(fontSize: 15, color: Colors.grey[600]))
+                                              Text("Rp ${formatNumberWithThousandSeparator(income[1]['price'])}", style: TextStyle(fontSize: 17, color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1])),
+                                              Text("${income[1]["description"]}", style: TextStyle(fontSize: 15, color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : Colors.grey[600]))
                                             ],
                                           ),
                                         ),
@@ -193,11 +202,13 @@ class _HomeScreenState extends State<Home> {
                                       Text("Recent Expenses", style: TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.bold)),
                                       TextButton(onPressed: (){
                                         showDialog(context: context, builder: (context){return const TestCard();});
-                                      }, child: Text("View All", style: TextStyle(color: Colors.black)))
+                                      }, child: TextButton(onPressed: (){Navigator.pushAndRemoveUntil(
+                                        context,MaterialPageRoute(builder: (context) => Transaction(income_selected: false, expense_selected: true,)),
+                                        ModalRoute.withName("/Home"));}, child: Text("View All", style: TextStyle(color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1]))),)
                                     ],
                                   ),
                                   Container(
-                                    color: Colors.grey[200],
+                                    color: Provider.of<SettingsModel>(context).isDarkMode ? dark[2] : light[2],
                                     height: MediaQuery.of(context).size.height/17,
                                     child: Row(
                                       children: [
@@ -207,8 +218,8 @@ class _HomeScreenState extends State<Home> {
                                           child: Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text("Rp ${formatNumberWithThousandSeparator(expense[0]['price'])}", style: TextStyle(fontSize: 17)),
-                                              Text("${expense[0]["description"]}", style: TextStyle(fontSize: 15, color: Colors.grey[600]))
+                                              Text("Rp ${formatNumberWithThousandSeparator(expense[0]['price'])}", style: TextStyle(fontSize: 17, color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1])),
+                                              Text("${expense[0]["description"]}", style: TextStyle(fontSize: 15, color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : Colors.grey[600]))
                                             ],
                                           ),
                                         ),
@@ -217,7 +228,7 @@ class _HomeScreenState extends State<Home> {
                                   ),
                                   SizedBox(height: 15),
                                   Container(
-                                    color: Colors.grey[200],
+                                    color: Provider.of<SettingsModel>(context).isDarkMode ? dark[2] : light[2],
                                     height: MediaQuery.of(context).size.height/17,
                                     child: Row(
                                       children: [
@@ -228,7 +239,7 @@ class _HomeScreenState extends State<Home> {
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text("Rp ${formatNumberWithThousandSeparator(expense[1]['price'])}", style: TextStyle(fontSize: 17)),
-                                              Text("${expense[1]["description"]}", style: TextStyle(fontSize: 15, color: Colors.grey[600]))
+                                              Text("${expense[1]["description"]}", style: TextStyle(fontSize: 15, color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : Colors.grey[600]))
                                             ],
                                           ),
                                         ),
@@ -251,7 +262,7 @@ class _HomeScreenState extends State<Home> {
                       width: double.infinity,
                       height: 100,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Provider.of<SettingsModel>(context).isDarkMode ? dark[0] : light[0],
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
@@ -272,7 +283,7 @@ class _HomeScreenState extends State<Home> {
                               children: [
                                 CircleAvatar(
                                   radius: 28,
-                                  backgroundColor: Colors.grey[300],
+                                  backgroundColor: Provider.of<SettingsModel>(context).isDarkMode ? dark[2] : light[2],
                                   child: Icon(Icons.arrow_drop_up, size: 55, color: Colors.green)
                                 ),
                                 SizedBox(width: 5),
@@ -294,7 +305,7 @@ class _HomeScreenState extends State<Home> {
                               children: [
                                 CircleAvatar(
                                   radius: 28,
-                                  backgroundColor: Colors.grey[300],
+                                  backgroundColor: Provider.of<SettingsModel>(context).isDarkMode ? dark[2] : light[2],
                                   child: Icon(Icons.arrow_drop_down, size: 55, color: Colors.red)
                                 ),
                                 SizedBox(width: 5),
@@ -321,7 +332,7 @@ class _HomeScreenState extends State<Home> {
         ),
       bottomNavigationBar: BottomAppBar(
         height: 90,
-        color: Colors.white,
+        color: Provider.of<SettingsModel>(context).isDarkMode ? dark[0] : light[0],
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -338,93 +349,97 @@ class _HomeScreenState extends State<Home> {
                 IconButton(icon: Icon(Icons.swap_horiz, size: 30), onPressed: () {
                   Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(builder: (context) => Transaction()),
+                    MaterialPageRoute(builder: (context) => Transaction(income_selected: true, expense_selected: true,)),
                     ModalRoute.withName("/Home"));
                 } ),
                 Text('Transaction',style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)), 
               ],
             ),
             FloatingActionButton(
-  backgroundColor: Color.fromARGB(255, 21, 96, 189),
-  child: Icon(Icons.add, color: Colors.white),
-  onPressed: () {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Add Transaction"),
-          content: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: ListTile(
-                            title: Text("Income"),
-                            leading: Radio<String>(
-                              value: "income",
-                              groupValue: _radioValue,
-                              onChanged: (String? value) {
-                                setState(() => _radioValue = value);
-                              },
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: ListTile(
-                            title: Text("Expense"),
-                            leading: Radio<String>(
-                              value: "expense",
-                              groupValue: _radioValue,
-                              onChanged: (String? value) {
-                                setState(() => _radioValue = value);
-                              },
-                            ),
-                          ),
-                        ),
+              backgroundColor: Color.fromARGB(255, 21, 96, 189),
+              child: Icon(Icons.add, color: Colors.white),
+              onPressed: () {
+                showDialog(context: context, builder: (context){
+                  return SizedBox(
+                    height: 400,
+                    child: AlertDialog(
+                      title: Text("Add Transaction ?"),
+                      actions: [
+                        TextButton(onPressed: (){
+                          showDialog(context: context, builder: (context){
+                            return SizedBox(
+                              height: 400,
+                              child: AlertDialog(
+                                title: Text("Insert Transaction"),
+                                actions: [
+                                  TextButton(onPressed: (){}, child: Text("ADD", style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
+                                  TextButton(onPressed: (){}, child: Text("CANCEL", style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
+                                ],
+                                content: SizedBox(
+                                  height: 400,
+                                  width: 350,
+                                  child: Column(children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Radio(
+                                              value: "income", 
+                                              groupValue: _radioValue, 
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _radioValue = value;
+                                                });
+                                              },
+                                            ),
+                                            Text("Income")
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Radio(
+                                              value: "expense", 
+                                              groupValue: _radioValue, 
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _radioValue = value;
+                                                });
+                                              }
+                                            ),
+                                            Text("Expense")
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                    TextField(
+                                      decoration: InputDecoration(
+                                        hintText: "Masukkan Judul",
+                                        enabledBorder: OutlineInputBorder(),
+                                        focusedBorder: OutlineInputBorder(),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    TextField(
+                                      decoration: InputDecoration(
+                                        hintText: "Masukkan Jumlah",
+                                        enabledBorder: OutlineInputBorder(),
+                                        focusedBorder: OutlineInputBorder(),),
+                                    )],),
+                                ),
+                              ),
+                            );
+                          });
+                        }, child: Text("ADD",style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
+                        TextButton(onPressed: (){}, child: Text("CANCEL",style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),))
                       ],
                     ),
-                    TextField(
-                      decoration: InputDecoration(
-                        hintText: "Masukkan Judul",
-                        enabledBorder: OutlineInputBorder(),
-                        focusedBorder: OutlineInputBorder(),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    TextField(
-                      decoration: InputDecoration(
-                        hintText: "Masukkan Jumlah",
-                        enabledBorder: OutlineInputBorder(),
-                        focusedBorder: OutlineInputBorder(),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                // Logic to handle when "ADD" button is pressed
-              },
-              child: Text("ADD", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+                  );
+                });
+              }, 
             ),
-            TextButton(
-              onPressed: () => Navigator.pop(context), // Close the dialog when "CANCEL" button is pressed
-              child: Text("CANCEL", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
-            ),
-          ],
-        );
-      },
-    );
-  },
-),
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
