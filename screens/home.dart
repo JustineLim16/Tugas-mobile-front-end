@@ -96,7 +96,7 @@ class _HomeScreenState extends State<Home> {
                       width: double.infinity, 
                       height: 100, 
                       decoration: BoxDecoration(
-                        color: Provider.of<SettingsModel>(context).isDarkMode ? dark[0] : light[0],
+                        color: Provider.of<SettingsModel>(context).isDarkMode ? Colors.black.withOpacity(0.6) : light[0],
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
@@ -152,45 +152,35 @@ class _HomeScreenState extends State<Home> {
                                           ModalRoute.withName("/Home"));}, child: Text("View All", style: TextStyle(color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1]))),)
                                       ],
                                     ),
-                                    Container(
-                                      color: Provider.of<SettingsModel>(context).isDarkMode ? dark[2] : light[2],
-                                      height: MediaQuery.of(context).size.height/17,
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.arrow_drop_up, size: 50, color: Colors.green),
-                                          Container(
-                                            width: MediaQuery.of(context).size.width/1.5,
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Text("Rp ${formatNumberWithThousandSeparator(income[0]['price'])}", style: TextStyle(fontSize: 17,color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1])),
-                                                Text("${income[0]["description"]}", style: TextStyle(fontSize: 15, color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : Colors.grey[600]))
-                                              ],
-                                            ),
+                                    ...income.take(2).map((e) {
+                                      return Column(
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10),
+                                            color: Provider.of<SettingsModel>(context).isDarkMode ? dark[2] : light[2],
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(height: 15),
-                                    Container(
-                                      color: Provider.of<SettingsModel>(context).isDarkMode ? dark[2] : light[2],
-                                      height: MediaQuery.of(context).size.height/17,
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.arrow_drop_up, size: 50, color: Colors.green),
-                                          Container(
-                                            width: MediaQuery.of(context).size.width/1.5,
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Text("Rp ${formatNumberWithThousandSeparator(income[1]['price'])}", style: TextStyle(fontSize: 17, color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1])),
-                                                Text("${income[1]["description"]}", style: TextStyle(fontSize: 15, color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : Colors.grey[600]))
-                                              ],
-                                            ),
+                                          height: MediaQuery.of(context).size.height/17,
+                                          child: Row(
+                                            children: [
+                                              Icon(Icons.arrow_drop_up, size: 50, color: Colors.green),
+                                              Container(
+                                                width: MediaQuery.of(context).size.width/1.5,
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    Text("Rp ${formatNumberWithThousandSeparator(e['price'])}", style: TextStyle(fontSize: 17,color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1])),
+                                                    Text("${e["description"]}", style: TextStyle(fontSize: 15, color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : Colors.grey[600]))
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                    )
+                                        ),
+                                        SizedBox(height: 15),
+                                      ],
+                                    );
+                                    }),
                                   ],
                                 ),
                               ),
@@ -208,45 +198,35 @@ class _HomeScreenState extends State<Home> {
                                           ModalRoute.withName("/Home"));}, child: Text("View All", style: TextStyle(color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1]))),)
                                       ],
                                     ),
-                                    Container(
-                                      color: Provider.of<SettingsModel>(context).isDarkMode ? dark[2] : light[2],
-                                      height: MediaQuery.of(context).size.height/17,
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.arrow_drop_down, size: 50, color: Colors.red),
-                                          Container(
-                                            width: MediaQuery.of(context).size.width/1.5,
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Text("Rp ${formatNumberWithThousandSeparator(expense[0]['price'])}", style: TextStyle(fontSize: 17, color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1])),
-                                                Text("${expense[0]["description"]}", style: TextStyle(fontSize: 15, color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : Colors.grey[600]))
-                                              ],
-                                            ),
+                                    ...expense.take(2).map((e) {
+                                      return Column(
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10),
+                                            color: Provider.of<SettingsModel>(context).isDarkMode ? dark[2] : light[2],
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(height: 15),
-                                    Container(
-                                      color: Provider.of<SettingsModel>(context).isDarkMode ? dark[2] : light[2],
-                                      height: MediaQuery.of(context).size.height/17,
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.arrow_drop_down, size: 50, color: Colors.red),
-                                          Container(
-                                            width: MediaQuery.of(context).size.width/1.5,
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Text("Rp ${formatNumberWithThousandSeparator(expense[1]['price'])}", style: TextStyle(fontSize: 17)),
-                                                Text("${expense[1]["description"]}", style: TextStyle(fontSize: 15, color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : Colors.grey[600]))
-                                              ],
-                                            ),
+                                          height: MediaQuery.of(context).size.height/17,
+                                          child: Row(
+                                            children: [
+                                              Icon(Icons.arrow_drop_down, size: 50, color: Colors.red),
+                                              Container(
+                                                width: MediaQuery.of(context).size.width/1.5,
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    Text("Rp ${formatNumberWithThousandSeparator(e['price'])}", style: TextStyle(fontSize: 17,color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1])),
+                                                    Text("${e["description"]}", style: TextStyle(fontSize: 15, color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : Colors.grey[600]))
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                    )
+                                        ),
+                                        SizedBox(height: 15),
+                                      ],
+                                    );
+                                    }),
                                   ],
                                 ),
                               )
@@ -264,13 +244,13 @@ class _HomeScreenState extends State<Home> {
                       width: double.infinity,
                       height: 100,
                       decoration: BoxDecoration(
-                        color: Provider.of<SettingsModel>(context).isDarkMode ? dark[0] : light[0],
+                        color: Provider.of<SettingsModel>(context).isDarkMode ? Colors.black.withOpacity(0.8) : light[0],
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
-                            offset: Offset(3, 3),
-                            blurRadius: 3,
-                            color: Colors.black.withOpacity(0.3),
+                            offset: Offset(0, 3),
+                            blurRadius: 5,
+                            color: Provider.of<SettingsModel>(context).isDarkMode ? Colors.white.withOpacity(0.2) : Colors.black.withOpacity(0.3),
                           ),
                         ],
                       ),
