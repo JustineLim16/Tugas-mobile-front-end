@@ -85,7 +85,10 @@ class _ProfileState extends State<Profile> {
             leading: Icon(Icons.exit_to_app),
             title: Text('Logout'),
             onTap: () {
-              // Aksi untuk 'Logout'
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Welcome()),
+              );
             },
           ),
         ],
