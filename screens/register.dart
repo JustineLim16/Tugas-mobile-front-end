@@ -69,23 +69,30 @@ class _RegisterPageState extends State<RegisterPage> {
           if (_usernameControl.text.isNotEmpty
               && _emailControl.text.isNotEmpty
               && _passwordControl.text.isNotEmpty) {
-                users.addAll(
-                  [{
-                    "username": _usernameControl.text,
-                    "email": _emailControl.text,
-                    "password": _passwordControl.text,
-                    "profile" : "https://i.pinimg.com/736x/88/08/6b/88086b5e12f8a2146ea48e37070819fa.jpg"
-                  }]
-                );
-                setState(() {
-                  _statusText = 'User registered, log in to start using Chocobi';
-                  _buttonDisabled = true;
-                });
-                Timer(
-                  const Duration(seconds: 3), () {
-                    Navigator.pop(context, true);
-                  },
-                );
+                if (users.any((key) => key['email'] == _emailControl.text)) {
+                    setState(() {
+                      _statusText = 'Email already registered, try a different one';
+                    }
+                  );
+                } else {
+                  users.addAll(
+                    [{
+                      "username": _usernameControl.text,
+                      "email": _emailControl.text,
+                      "password": _passwordControl.text,
+                      "profile" : "https://i.pinimg.com/736x/88/08/6b/88086b5e12f8a2146ea48e37070819fa.jpg"
+                    }]
+                  );
+                  setState(() {
+                    _statusText = 'User registered, log in to start using Chocobi';
+                    _buttonDisabled = true;
+                  });
+                  Timer(
+                    const Duration(seconds: 3), () {
+                      Navigator.pop(context, true);
+                    },
+                  );
+                }
               } else {
                 setState(() {
                   _statusText = 'Something\'s missing, please try again';
