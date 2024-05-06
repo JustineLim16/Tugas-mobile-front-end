@@ -4,6 +4,7 @@ import 'package:chocobi/screens/home.dart';
 import 'package:chocobi/screens/testCard.dart';
 import 'package:chocobi/screens/transaction.dart';
 import 'package:provider/provider.dart';
+import 'package:chocobi/screens/export.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -74,7 +75,10 @@ class _ProfileState extends State<Profile> {
             leading: Icon(Icons.upload),
             title: Text('Export Data'),
             onTap: () {
-              // Aksi untuk 'Export Data'
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ExportSuccessPage()),
+              );
             },
           ),
           ListTile(
