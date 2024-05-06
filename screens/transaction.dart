@@ -1,3 +1,4 @@
+import 'package:chocobi/screens/settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -6,15 +7,24 @@ import 'package:chocobi/screens/home.dart';
 import 'package:chocobi/screens/profile.dart';
 import 'package:chocobi/screens/testCard.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class Transaction extends StatefulWidget {
-  const Transaction({super.key});
+  Transaction({super.key, required this.income_selected, required this.expense_selected});
+  final bool income_selected;
+  final bool expense_selected;
 
   @override
   State<Transaction> createState() => _TransactionState();
 }
 
 class _TransactionState extends State<Transaction> {
+  List light = [Colors.white, Colors.black, Colors.grey[300]];
+  List dark = [Colors.black, Colors.white, Colors.grey[800]];
+
+  List <String> month = ["Month", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  List <String> year = ["Year", "2021", "2022", "2023", "2024"];
+  String dropDownValue = "satu";
 
   List<Map<String, dynamic>> history = [
     {
@@ -27,6 +37,13 @@ class _TransactionState extends State<Transaction> {
     }
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    history[0]["_selected"] = widget.income_selected;
+    history[1]["_selected"] = widget.expense_selected;
+  }
+
   String formatNumberWithThousandSeparator(num number) {
     final formatter = NumberFormat('#,##0', 'id');
     return formatter.format(number);
@@ -35,7 +52,6 @@ class _TransactionState extends State<Transaction> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 17, 80, 156), 
         title: Text(
@@ -61,7 +77,7 @@ class _TransactionState extends State<Transaction> {
                     label: Text(
                       "Income",
                       style: TextStyle(
-                        color: history[0]["_selected"] ? Colors.white : Colors.black),
+                        color: history[0]["_selected"] ? Colors.white : Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1]),
                     ),
                     onSelected: (bool selected) {
                       setState(() {
@@ -77,7 +93,7 @@ class _TransactionState extends State<Transaction> {
                     label: Text(
                       "Expense",
                       style: TextStyle(
-                        color: history[1]["_selected"] ? Colors.white : Colors.black),
+                        color: history[1]["_selected"] ? Colors.white : Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1]),
                     ),
                     onSelected: (bool selected) {
                       setState(() {
@@ -85,6 +101,28 @@ class _TransactionState extends State<Transaction> {
                       });
                     },
                   )
+                ],
+              ),
+              Divider(),
+              Row(
+                children: [
+                  DropdownMenu(
+                    label: Text("Month"),
+                    dropdownMenuEntries: month.map((e) => 
+                      DropdownMenuEntry(
+                        value: dropDownValue, label: e
+                      )
+                    ).toList()
+                  ),
+                  SizedBox(width: 20),
+                  DropdownMenu(
+                    label: Text("Year"),
+                    dropdownMenuEntries: year.map((e) => 
+                      DropdownMenuEntry(
+                        value: dropDownValue, label: e
+                      )
+                    ).toList()
+                  ),
                 ],
               ),
               Divider(),
@@ -97,38 +135,38 @@ class _TransactionState extends State<Transaction> {
                       IconData iconData = all[position]["category"] == "income" ? Icons.arrow_drop_up : Icons.arrow_drop_down;
                       Color iconColor = all[position]["category"] == "income" ? Colors.green : Colors.red;
 
-                      return SizedBox(
-                        height: MediaQuery.of(context).size.height/10,
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                      return Column(
+                        children: [
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height/10,
+                            child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Text("${all[position]['date']}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                                    Text("${all[position]['description']}", style: TextStyle(color: iconColor, fontSize: 18))
+                                    Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text("${all[position]['date']}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                                        Text("${all[position]['description']}", style: TextStyle(color: iconColor, fontSize: 18))
+                                      ],
+                                    ),
+                                    Container(
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            width: 130,
+                                            child: Text("Rp ${formatNumberWithThousandSeparator(all[position]['price'])}", style: TextStyle(color: iconColor, fontSize: 20), textAlign: TextAlign.right)
+                                          ),
+                                          Icon(iconData, color: iconColor, size: 40)
+                                        ],
+                                      ),
+                                    ),
                                   ],
                                 ),
-                                Container(
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        width: 130,
-                                        child: Text("Rp ${formatNumberWithThousandSeparator(all[position]['price'])}", style: TextStyle(color: iconColor, fontSize: 20), textAlign: TextAlign.right)
-                                      ),
-                                      Icon(iconData, color: iconColor, size: 40)
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Divider()
-                          ],
-                        ),
+                          ),
+                          Divider()
+                        ],
                       );
                     } 
                     else {
@@ -143,7 +181,7 @@ class _TransactionState extends State<Transaction> {
       ),
       bottomNavigationBar: BottomAppBar(
         height: 90,
-        color: Colors.white,
+        color: Provider.of<SettingsModel>(context).isDarkMode ? dark[0] : light[0],
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
