@@ -133,123 +133,125 @@ class _HomeScreenState extends State<Home> {
                         color: Provider.of<SettingsModel>(context).isDarkMode ? dark[0] : light[0],
                         borderRadius: BorderRadius.only(topLeft: Radius.circular(50), topRight: Radius.circular(50)),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 60, left: 30, right: 30),
-                        child: Column(
-                          children: [
-                            Container(
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text("Recent Incomes", style: TextStyle(color: Colors.green, fontSize: 16, fontWeight: FontWeight.bold)),
-                                      TextButton(onPressed: (){
-                                        showDialog(context: context, builder: (context){return const TestCard();});
-                                      }, child: TextButton(onPressed: (){Navigator.pushAndRemoveUntil(
-                                        context,MaterialPageRoute(builder: (context) => Transaction(income_selected: true, expense_selected: false,)),
-                                        ModalRoute.withName("/Home"));}, child: Text("View All", style: TextStyle(color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1]))),)
-                                    ],
-                                  ),
-                                  Container(
-                                    color: Provider.of<SettingsModel>(context).isDarkMode ? dark[2] : light[2],
-                                    height: MediaQuery.of(context).size.height/17,
-                                    child: Row(
+                      child: SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 60, left: 30, right: 30),
+                          child: Column(
+                            children: [
+                              Container(
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Icon(Icons.arrow_drop_up, size: 50, color: Colors.green),
-                                        Container(
-                                          width: MediaQuery.of(context).size.width/1.5,
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text("Rp ${formatNumberWithThousandSeparator(income[0]['price'])}", style: TextStyle(fontSize: 17,color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1])),
-                                              Text("${income[0]["description"]}", style: TextStyle(fontSize: 15, color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : Colors.grey[600]))
-                                            ],
-                                          ),
-                                        ),
+                                        Text("Recent Incomes", style: TextStyle(color: Colors.green, fontSize: 16, fontWeight: FontWeight.bold)),
+                                        TextButton(onPressed: (){
+                                          showDialog(context: context, builder: (context){return const TestCard();});
+                                        }, child: TextButton(onPressed: (){Navigator.pushAndRemoveUntil(
+                                          context,MaterialPageRoute(builder: (context) => Transaction(income_selected: true, expense_selected: false,)),
+                                          ModalRoute.withName("/Home"));}, child: Text("View All", style: TextStyle(color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1]))),)
                                       ],
                                     ),
-                                  ),
-                                  SizedBox(height: 15),
-                                  Container(
-                                    color: Provider.of<SettingsModel>(context).isDarkMode ? dark[2] : light[2],
-                                    height: MediaQuery.of(context).size.height/17,
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.arrow_drop_up, size: 50, color: Colors.green),
-                                        Container(
-                                          width: MediaQuery.of(context).size.width/1.5,
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text("Rp ${formatNumberWithThousandSeparator(income[1]['price'])}", style: TextStyle(fontSize: 17, color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1])),
-                                              Text("${income[1]["description"]}", style: TextStyle(fontSize: 15, color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : Colors.grey[600]))
-                                            ],
+                                    Container(
+                                      color: Provider.of<SettingsModel>(context).isDarkMode ? dark[2] : light[2],
+                                      height: MediaQuery.of(context).size.height/17,
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.arrow_drop_up, size: 50, color: Colors.green),
+                                          Container(
+                                            width: MediaQuery.of(context).size.width/1.5,
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text("Rp ${formatNumberWithThousandSeparator(income[0]['price'])}", style: TextStyle(fontSize: 17,color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1])),
+                                                Text("${income[0]["description"]}", style: TextStyle(fontSize: 15, color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : Colors.grey[600]))
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  )
-                                ],
+                                    SizedBox(height: 15),
+                                    Container(
+                                      color: Provider.of<SettingsModel>(context).isDarkMode ? dark[2] : light[2],
+                                      height: MediaQuery.of(context).size.height/17,
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.arrow_drop_up, size: 50, color: Colors.green),
+                                          Container(
+                                            width: MediaQuery.of(context).size.width/1.5,
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text("Rp ${formatNumberWithThousandSeparator(income[1]['price'])}", style: TextStyle(fontSize: 17, color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1])),
+                                                Text("${income[1]["description"]}", style: TextStyle(fontSize: 15, color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : Colors.grey[600]))
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
-                            ),
-                            Container(
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text("Recent Expenses", style: TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.bold)),
-                                      TextButton(onPressed: (){
-                                        showDialog(context: context, builder: (context){return const TestCard();});
-                                      }, child: TextButton(onPressed: (){Navigator.pushAndRemoveUntil(
-                                        context,MaterialPageRoute(builder: (context) => Transaction(income_selected: false, expense_selected: true,)),
-                                        ModalRoute.withName("/Home"));}, child: Text("View All", style: TextStyle(color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1]))),)
-                                    ],
-                                  ),
-                                  Container(
-                                    color: Provider.of<SettingsModel>(context).isDarkMode ? dark[2] : light[2],
-                                    height: MediaQuery.of(context).size.height/17,
-                                    child: Row(
+                              Container(
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Icon(Icons.arrow_drop_down, size: 50, color: Colors.red),
-                                        Container(
-                                          width: MediaQuery.of(context).size.width/1.5,
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text("Rp ${formatNumberWithThousandSeparator(expense[0]['price'])}", style: TextStyle(fontSize: 17, color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1])),
-                                              Text("${expense[0]["description"]}", style: TextStyle(fontSize: 15, color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : Colors.grey[600]))
-                                            ],
-                                          ),
-                                        ),
+                                        Text("Recent Expenses", style: TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.bold)),
+                                        TextButton(onPressed: (){
+                                          showDialog(context: context, builder: (context){return const TestCard();});
+                                        }, child: TextButton(onPressed: (){Navigator.pushAndRemoveUntil(
+                                          context,MaterialPageRoute(builder: (context) => Transaction(income_selected: false, expense_selected: true,)),
+                                          ModalRoute.withName("/Home"));}, child: Text("View All", style: TextStyle(color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1]))),)
                                       ],
                                     ),
-                                  ),
-                                  SizedBox(height: 15),
-                                  Container(
-                                    color: Provider.of<SettingsModel>(context).isDarkMode ? dark[2] : light[2],
-                                    height: MediaQuery.of(context).size.height/17,
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.arrow_drop_down, size: 50, color: Colors.red),
-                                        Container(
-                                          width: MediaQuery.of(context).size.width/1.5,
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text("Rp ${formatNumberWithThousandSeparator(expense[1]['price'])}", style: TextStyle(fontSize: 17)),
-                                              Text("${expense[1]["description"]}", style: TextStyle(fontSize: 15, color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : Colors.grey[600]))
-                                            ],
+                                    Container(
+                                      color: Provider.of<SettingsModel>(context).isDarkMode ? dark[2] : light[2],
+                                      height: MediaQuery.of(context).size.height/17,
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.arrow_drop_down, size: 50, color: Colors.red),
+                                          Container(
+                                            width: MediaQuery.of(context).size.width/1.5,
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text("Rp ${formatNumberWithThousandSeparator(expense[0]['price'])}", style: TextStyle(fontSize: 17, color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1])),
+                                                Text("${expense[0]["description"]}", style: TextStyle(fontSize: 15, color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : Colors.grey[600]))
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  )
-                                ],
-                              ),
-                            )
-                          ]
+                                    SizedBox(height: 15),
+                                    Container(
+                                      color: Provider.of<SettingsModel>(context).isDarkMode ? dark[2] : light[2],
+                                      height: MediaQuery.of(context).size.height/17,
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.arrow_drop_down, size: 50, color: Colors.red),
+                                          Container(
+                                            width: MediaQuery.of(context).size.width/1.5,
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text("Rp ${formatNumberWithThousandSeparator(expense[1]['price'])}", style: TextStyle(fontSize: 17)),
+                                                Text("${expense[1]["description"]}", style: TextStyle(fontSize: 15, color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : Colors.grey[600]))
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              )
+                            ]
+                          ),
                         ),
                       )
                     ),
