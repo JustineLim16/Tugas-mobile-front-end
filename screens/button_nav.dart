@@ -1,15 +1,25 @@
+import 'package:chocobi/screens/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:chocobi/screens/home.dart';
 import 'package:chocobi/screens/profile.dart';
 import 'package:chocobi/screens/transaction.dart';
 import 'package:chocobi/screens/testCard.dart';
+import 'package:provider/provider.dart';
 
-class CustomBottomAppBar extends StatelessWidget {
+class CustomBottomAppBar extends StatefulWidget {
+  @override
+  State<CustomBottomAppBar> createState() => _CustomBottomAppBarState();
+}
+
+class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
+  List light = [Colors.white, Colors.black, Colors.grey[300]];
+  List dark = [Colors.black, Colors.white, Colors.grey[800]];
+
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
       height: 90,
-      color: Colors.white,
+      color: Provider.of<SettingsModel>(context).isDarkMode ? Colors.black : Colors.white,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -23,7 +33,7 @@ class CustomBottomAppBar extends StatelessWidget {
           _buildBottomAppBarItem(Icons.swap_horiz, 'Transaction', () {
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (context) => Transaction()),
+              MaterialPageRoute(builder: (context) => Transaction(income_selected: true, expense_selected: true,)),
               ModalRoute.withName("/Home"),
             );
           }),
@@ -168,7 +178,10 @@ class CustomBottomAppBar extends StatelessWidget {
   }
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   final TextEditingController _titleController = TextEditingController();
+
   final TextEditingController _amountController = TextEditingController();
+
   String? _radioValue;
 }
