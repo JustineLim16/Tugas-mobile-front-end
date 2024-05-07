@@ -1,19 +1,53 @@
-import 'package:chocobi/screens/settings.dart';
+import 'dart:ui';
+import 'package:chocobi/screens/welcome.dart';
+import 'package:intl/intl.dart';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
+import 'package:chocobi/data/money.dart';
+
 import 'package:chocobi/screens/home.dart';
 import 'package:chocobi/screens/testCard.dart';
 import 'package:chocobi/screens/transaction.dart';
-import 'package:provider/provider.dart';
 import 'package:chocobi/screens/export.dart';
+import 'package:chocobi/screens/button_nav.dart';
 
 class Profile extends StatefulWidget {
+  Profile ({super.key});
+
   @override
-  State<Profile> createState() => _ProfileState();
+  // ignore: library_private_types_in_public_api
+  _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-class _ProfileState extends State<Profile> {
-  List light = [Colors.white, Colors.black];
-  List dark = [Colors.black, Colors.white];
+class _ProfileScreenState extends State<Profile> {
+  num totalIncome = 0;
+  num totalExpense = 0;
+
+  String? _radioValue = "";
+
+
+  @override
+  void initState() {
+    super.initState();
+    _calculateTotalPrice();
+  }
+
+  void _calculateTotalPrice() {
+    for (var item in income) {
+      totalIncome += item['price'];
+    }
+    for (var item in expense) {
+      totalExpense += item['price'];
+    }
+  }
+
+  String formatNumberWithThousandSeparator(num number) {
+    final formatter = NumberFormat('#,##0', 'id');
+    return formatter.format(number);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,10 +99,7 @@ class _ProfileState extends State<Profile> {
             leading: Icon(Icons.settings),
             title: Text('Settings'),
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SettingsPage()),
-              );
+              // Aksi untuk 'Settings'
             },
           ),
           ListTile(
@@ -79,6 +110,7 @@ class _ProfileState extends State<Profile> {
                 context,
                 MaterialPageRoute(builder: (context) => ExportSuccessPage()),
               );
+
             },
           ),
           ListTile(
@@ -93,107 +125,7 @@ class _ProfileState extends State<Profile> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomAppBar(
-        height: 90,
-        color: Provider.of<SettingsModel>(context).isDarkMode ? dark[0] : light[0],
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(icon: Icon(Icons.home, size: 30), onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => Home()),
-                    ModalRoute.withName("/Profile"));
-                }),
-                Text('Home',style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)), 
-              ],
-            ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(icon: Icon(Icons.swap_horiz, size: 30), onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => Transaction(income_selected: true, expense_selected: true,)),
-                    ModalRoute.withName("/Profile"));
-                } ),
-                Text('Transaction',style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)), 
-              ],
-            ),
-            FloatingActionButton(
-              backgroundColor: Color.fromARGB(255, 21, 96, 189),
-              child: Icon(Icons.add, color: Provider.of<SettingsModel>(context).isDarkMode ? dark[0] : light[0]),
-              onPressed: () {
-                showDialog(context: context, builder: (context){
-                  return SizedBox(
-                    height: 400,
-                    child: AlertDialog(
-                      title: Text("Add Transaction ?"),
-                      actions: [
-                        TextButton(onPressed: (){
-                          showDialog(context: context, builder: (context){
-                            return SizedBox(
-                              height: 400,
-                              child: AlertDialog(
-                                title: Text("Insert Transaction"),
-                                actions: [
-                                  TextButton(onPressed: (){}, child: Text("ADD", style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
-                                  TextButton(onPressed: (){}, child: Text("CANCEL", style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
-                                ],
-                                content: SizedBox(
-                                  height: 400,
-                                  width: 350,
-                                  child: Column(children: [
-                                    TextField(
-                                      decoration: InputDecoration(
-                                        hintText: "Masukkan Judul",
-                                        enabledBorder: OutlineInputBorder(),
-                                        focusedBorder: OutlineInputBorder(),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    TextField(
-                                      decoration: InputDecoration(
-                                        hintText: "Masukkan Jumlah",
-                                        enabledBorder: OutlineInputBorder(),
-                                        focusedBorder: OutlineInputBorder(),),
-                                    )],),
-                                ),
-                              ),
-                            );
-                          });
-                        }, child: Text("ADD",style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),)),
-                        TextButton(onPressed: (){}, child: Text("CANCEL",style: TextStyle(color: Colors.blue,fontWeight: FontWeight.bold),))
-                      ],
-                    ),
-                  );
-                });
-              }, 
-            ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(icon: Icon(Icons.account_balance_wallet, size: 30), onPressed: () {
-                  showDialog(context: context, builder: (context){return const TestCard();});
-                }),
-                Text('Budget',style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)), 
-              ],
-            ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(icon: Icon(Icons.person, size: 30, color: Color.fromARGB(255, 17, 80, 156)), onPressed: () {}),
-                Text('Profile',style: TextStyle(fontSize: 11, color: Color.fromARGB(255, 17, 80, 156), fontWeight: FontWeight.bold)), 
-              ],
-            ),
-          ],
-        ),
-      ),
+      bottomNavigationBar: CustomBottomAppBar(),
     );
   }
 }
