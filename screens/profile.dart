@@ -1,53 +1,19 @@
-import 'dart:ui';
-import 'package:chocobi/screens/welcome.dart';
-import 'package:intl/intl.dart';
-
-import 'package:flutter/cupertino.dart';
+import 'package:chocobi/screens/settings.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
-import 'package:chocobi/data/money.dart';
-
 import 'package:chocobi/screens/home.dart';
 import 'package:chocobi/screens/testCard.dart';
 import 'package:chocobi/screens/transaction.dart';
-import 'package:chocobi/screens/export.dart';
+import 'package:provider/provider.dart';
 import 'package:chocobi/screens/button_nav.dart';
 
 class Profile extends StatefulWidget {
-  Profile ({super.key});
-
   @override
-  // ignore: library_private_types_in_public_api
-  _ProfileScreenState createState() => _ProfileScreenState();
+  State<Profile> createState() => _ProfileState();
 }
 
-class _ProfileScreenState extends State<Profile> {
-  num totalIncome = 0;
-  num totalExpense = 0;
-
-  String? _radioValue = "";
-
-
-  @override
-  void initState() {
-    super.initState();
-    _calculateTotalPrice();
-  }
-
-  void _calculateTotalPrice() {
-    for (var item in income) {
-      totalIncome += item['price'];
-    }
-    for (var item in expense) {
-      totalExpense += item['price'];
-    }
-  }
-
-  String formatNumberWithThousandSeparator(num number) {
-    final formatter = NumberFormat('#,##0', 'id');
-    return formatter.format(number);
-  }
+class _ProfileState extends State<Profile> {
+  List light = [Colors.white, Colors.black];
+  List dark = [Colors.black, Colors.white];
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +65,10 @@ class _ProfileScreenState extends State<Profile> {
             leading: Icon(Icons.settings),
             title: Text('Settings'),
             onTap: () {
-              // Aksi untuk 'Settings'
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SettingsPage()),
+              );
             },
           ),
           ListTile(
@@ -110,7 +79,6 @@ class _ProfileScreenState extends State<Profile> {
                 context,
                 MaterialPageRoute(builder: (context) => ExportSuccessPage()),
               );
-
             },
           ),
           ListTile(
