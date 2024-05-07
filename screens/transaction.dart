@@ -24,7 +24,6 @@
 
     List <String> month = ["Month", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     List <String> year = ["Year", "2021", "2022", "2023", "2024"];
-    String dropDownValue = "satu";
 
     List<Map<String, dynamic>> history = [
       {
@@ -36,6 +35,33 @@
         "_selected": true
       }
     ];
+
+    String selectedMonth = "Month";
+    String selectedYear = "Year";
+
+    // Method to filter the data based on selected month and year
+    List<Map<String, dynamic>> filteredData() {
+      return all.where((item) {
+        if (selectedMonth == "Month" && selectedYear == "Year") {
+          return true; // No filter applied
+        } else {
+          final DateTime date = DateTime.parse(item['date']);
+          final itemMonth = DateFormat('MMMM').format(date);
+          final itemYear = DateFormat('yyyy').format(date);
+          if (selectedMonth != "Month" && selectedYear != "Year") {
+            return itemMonth == selectedMonth && itemYear == selectedYear;
+          }
+          if (selectedMonth != "Month" && selectedYear == "Year") {
+            return itemMonth == selectedMonth;
+          }
+          if (selectedMonth == "Month" && selectedYear != "Year") {
+            return itemYear == selectedYear;
+          }
+          return false;
+        }
+      }).toList();
+    }
+
 
     @override
     void initState() {
@@ -110,31 +136,41 @@
                       label: Text("Month"),
                       dropdownMenuEntries: month.map((e) => 
                         DropdownMenuEntry(
-                          value: dropDownValue, label: e
+                          value: e, label: e
                         )
                       ).toList(),
-                      
+                      onSelected: (newValue) {
+                      setState(() {
+                        selectedMonth = newValue!;
+                        print(selectedMonth);
+                      });
+                    },
                     ),
                     SizedBox(width: 20),
                     DropdownMenu(
                       label: Text("Year"),
                       dropdownMenuEntries: year.map((e) => 
                         DropdownMenuEntry(
-                          value: dropDownValue, label: e
+                          value: e, label: e
                         )
-                      ).toList()
+                      ).toList(),
+                      onSelected: (newValue) {
+                      setState(() {
+                        selectedYear = newValue!;
+                      });
+                    },
                     ),
                   ],
                 ),
                 Divider(),
                 Expanded(
                   child: ListView.builder(
-                    itemCount: all.length,
+                    itemCount: filteredData().length,
                     itemBuilder: (context, position) {
-                      if ((history[0]["_selected"] && all[position]["category"] == "income") ||
-                          (history[1]["_selected"] && all[position]["category"] == "expense")) {
-                        IconData iconData = all[position]["category"] == "income" ? Icons.arrow_drop_up : Icons.arrow_drop_down;
-                        Color iconColor = all[position]["category"] == "income" ? Colors.green : Colors.red;
+                      if ((history[0]["_selected"] && filteredData()[position]["category"] == "income") ||
+                          (history[1]["_selected"] && filteredData()[position]["category"] == "expense")) {
+                        IconData iconData = filteredData()[position]["category"] == "income" ? Icons.arrow_drop_up : Icons.arrow_drop_down;
+                        Color iconColor = filteredData()[position]["category"] == "income" ? Colors.green : Colors.red;
 
                         return Column(
                           children: [
@@ -148,8 +184,8 @@
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text("${all[position]['date']}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                                          Text("${all[position]['description']}", style: TextStyle(color: iconColor, fontSize: 15))
+                                          Text("${filteredData()[position]['date']}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                                          Text("${filteredData()[position]['description']}", style: TextStyle(color: iconColor, fontSize: 15))
                                         ],
                                       ),
                                       Container(
