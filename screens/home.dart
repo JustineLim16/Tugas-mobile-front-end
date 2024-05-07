@@ -53,6 +53,7 @@ class _HomeScreenState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Color.fromARGB(255, 17, 80, 156),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -96,7 +97,7 @@ class _HomeScreenState extends State<Home> {
                       width: double.infinity, 
                       height: 100, 
                       decoration: BoxDecoration(
-                        color: Provider.of<SettingsModel>(context).isDarkMode ? Colors.black.withOpacity(0.6) : light[0],
+                        color: Provider.of<SettingsModel>(context).isDarkMode ? dark[0] : light[0],
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
@@ -244,7 +245,7 @@ class _HomeScreenState extends State<Home> {
                       width: double.infinity,
                       height: 100,
                       decoration: BoxDecoration(
-                        color: Provider.of<SettingsModel>(context).isDarkMode ? Colors.black.withOpacity(0.8) : light[0],
+                        color: Provider.of<SettingsModel>(context).isDarkMode ? dark[0] : light[0],
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
