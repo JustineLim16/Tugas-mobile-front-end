@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import '';
-
 
 class CustomFloatingActionButton extends StatefulWidget {
   @override
@@ -8,7 +6,10 @@ class CustomFloatingActionButton extends StatefulWidget {
 }
 
 class _CustomFloatingActionButtonState extends State<CustomFloatingActionButton> {
-  String? _radioValue = "";
+  String? _radioValue;
+  final _formKey = GlobalKey<FormState>();
+  final _titleController = TextEditingController();
+  final _amountController = TextEditingController();
 
   void _showAddTransactionDialog(BuildContext context) {
     showDialog(
@@ -18,55 +19,79 @@ class _CustomFloatingActionButtonState extends State<CustomFloatingActionButton>
           title: Text("Add Transaction"),
           content: StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
-              return SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: ListTile(
-                            title: Text("Income"),
-                            leading: Radio<String>(
-                              value: "income",
-                              groupValue: _radioValue,
-                              onChanged: (String? value) {
-                                setState(() => _radioValue = value);
-                              },
+              return Form(
+                key: _formKey,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: ListTile(
+                              title: Text("Income"),
+                              leading: Radio<String>(
+                                value: "income",
+                                groupValue: _radioValue,
+                                onChanged: (String? value) {
+                                  setState(() => _radioValue = value);
+                                },
+                              ),
                             ),
                           ),
-                        ),
-                        Expanded(
-                          child: ListTile(
-                            title: Text("Expense"),
-                            leading: Radio<String>(
-                              value: "expense",
-                              groupValue: _radioValue,
-                              onChanged: (String? value) {
-                                setState(() => _radioValue = value);
-                              },
+                          Expanded(
+                            child: ListTile(
+                              title: Text("Expense"),
+                              leading: Radio<String>(
+                                value: "expense",
+                                groupValue: _radioValue,
+                                onChanged: (String? value) {
+                                  setState(() => _radioValue = value);
+                                },
+                              ),
                             ),
                           ),
+                        ],
+                      ),
+                      TextFormField(
+                        controller: _titleController,
+                        decoration: InputDecoration(
+                          hintText: "Masukkan Judul",
+                          enabledBorder: OutlineInputBorder(),
+                          focusedBorder: OutlineInputBorder(),
                         ),
-                      ],
-                    ),
-                    TextField(
-                      decoration: InputDecoration(
-                        hintText: "Masukkan Judul",
-                        enabledBorder: OutlineInputBorder(),
-                        focusedBorder: OutlineInputBorder(),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a title';
+                          }
+                          return null;
+                        },
                       ),
-                    ),
-                    SizedBox(height: 10),
-                    TextField(
-                      decoration: InputDecoration(
-                        hintText: "Masukkan Jumlah",
-                        enabledBorder: OutlineInputBorder(),
-                        focusedBorder: OutlineInputBorder(),
+                      SizedBox(height: 10),
+                      TextFormField(
+                        controller: _amountController,
+                        decoration: InputDecoration(
+                          hintText: "Masukkan Jumlah",
+                          enabledBorder: OutlineInputBorder(),
+                          focusedBorder: OutlineInputBorder(),
+                        ),
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter an amount';
+                          }
+                          if (double.tryParse(value) == null) {
+                            return 'Please enter a valid number';
+                          }
+                          if (double.parse(value) <= 0) {
+                            return 'Please enter a number greater than zero';
+                          }
+                          return null;
+                        },
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             },
@@ -74,7 +99,13 @@ class _CustomFloatingActionButtonState extends State<CustomFloatingActionButton>
           actions: [
             TextButton(
               onPressed: () {
-                // Logic to handle when "ADD" button is pressed
+                if (_formKey.currentState!.validate()) {
+                  // If the form is valid, display a snackbar and add the transaction
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Processing Data')),
+                  );
+                  Navigator.pop(context); // Close the dialog
+                }
               },
               child: Text("ADD", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
             ),
