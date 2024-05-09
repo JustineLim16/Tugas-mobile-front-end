@@ -9,7 +9,10 @@ class ClockWidget extends StatelessWidget {
     return StreamBuilder(
       stream: Stream.periodic(const Duration(seconds: 1)),
       builder: (context, snapshot) {
-        return Text(DateFormat('MM/dd/yyyy hh:mm:ss').format(DateTime.now()), style: TextStyle(color: Colors.white));
+        return Text(
+          DateFormat('MM/dd/yyyy hh:mm:ss').format(DateTime.now()),
+          style: const TextStyle(color: Colors.white)
+        );
       },
     );
   }

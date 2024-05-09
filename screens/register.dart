@@ -1,4 +1,3 @@
-// sebelumnya: signup.dart
 import 'dart:async';
 import 'package:flutter/material.dart';
 
@@ -16,7 +15,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final _emailControl = TextEditingController();
   final _passwordControl  = TextEditingController();
   String _statusText = '';
-  bool _buttonDisabled = false;
+  bool _widgetDisabled = false;
   
   @override
   Widget build(BuildContext context) {
@@ -40,6 +39,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 border: OutlineInputBorder(),
                 hintText: 'Enter new username'
               ),
+              readOnly: _widgetDisabled,
               controller: _usernameControl,
             ),
             const SizedBox(height: 20),
@@ -48,6 +48,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 border: OutlineInputBorder(),
                 hintText: 'Enter registered email'
               ),
+              readOnly: _widgetDisabled,
               controller: _emailControl,
             ),
             const SizedBox(height: 20),
@@ -57,6 +58,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 hintText: 'Enter new password'
               ),
               obscureText: true,
+              readOnly: _widgetDisabled,
               controller: _passwordControl,
             ),
             const SizedBox(height: 20),
@@ -65,7 +67,7 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
       actions: [
-        TextButton(onPressed: _buttonDisabled ? null : () {
+        TextButton(onPressed: _widgetDisabled ? null : () {
           if (_usernameControl.text.isNotEmpty
               && _emailControl.text.isNotEmpty
               && _passwordControl.text.isNotEmpty) {
@@ -85,7 +87,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   );
                   setState(() {
                     _statusText = 'User registered, log in to start using Chocobi';
-                    _buttonDisabled = true;
+                    _widgetDisabled = true;
                   });
                   Timer(
                     const Duration(seconds: 3), () {
@@ -102,7 +104,7 @@ class _RegisterPageState extends State<RegisterPage> {
           },
           child: const Text('Register')
         ),
-        TextButton(onPressed: _buttonDisabled ? null : () {
+        TextButton(onPressed: _widgetDisabled ? null : () {
             Navigator.pop(context, true);
           },
           child: const Text('Cancel')

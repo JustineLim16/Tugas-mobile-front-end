@@ -1,13 +1,13 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
+
 import 'package:chocobi/screens/welcome.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
@@ -19,12 +19,12 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void movingToNextScreen() {
     Timer(
-      Duration(seconds: 3),
+      const Duration(seconds: 3),
       () {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => Welcome(),
+            builder: (context) => const Welcome(),
           ),
         );
       },
@@ -37,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Center(
         child: Container(
           width: double.infinity,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
             colors: [Color.fromARGB(255, 21, 96, 189), Color.fromARGB(255, 0, 124, 190)],
             begin: Alignment.topCenter,
@@ -46,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
             tileMode: TileMode.repeated,
           )
           ),
-          child: Column(
+          child: const Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(

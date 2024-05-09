@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:chocobi/screens/profile.dart';
+//import 'package:chocobi/screens/profile.dart';
 
 class ExportSuccessPage extends StatelessWidget {
   @override
