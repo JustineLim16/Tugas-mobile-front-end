@@ -5,6 +5,7 @@ import 'package:chocobi/screens/testCard.dart';
 import 'package:chocobi/screens/transaction.dart';
 import 'package:provider/provider.dart';
 import 'package:chocobi/screens/button_nav.dart';
+import 'package:chocobi/screens/welcome.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -75,9 +76,42 @@ class _ProfileState extends State<Profile> {
             leading: Icon(Icons.upload),
             title: Text('Export Data'),
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ExportSuccessPage()),
+              showModalBottomSheet(
+                context: context,
+                builder: (BuildContext context) {
+                  return Container(
+                    height: 250,
+                    child: Column(
+                      children: [
+                        ListTile(
+                          leading: Icon(Icons.picture_as_pdf),
+                          title: Text('PDF'),
+                          onTap: () {},
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.table_chart),
+                          title: Text('Excel'),
+                          onTap: () {},
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.description),
+                          title: Text('Word'),
+                          onTap: () {},
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.image),
+                          title: Text('JPG'),
+                          onTap: () {},
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.text_snippet),
+                          title: Text('RTF'),
+                          onTap: () {},
+                        ),
+                      ],
+                    ),
+                  );
+                },
               );
             },
           ),
