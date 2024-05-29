@@ -1,17 +1,18 @@
+import 'package:chocobi/screens/button_nav.dart';
+import 'package:chocobi/screens/settings.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:chocobi/data/money.dart';
+import 'package:chocobi/screens/home.dart';
+import 'package:chocobi/screens/profile.dart';
+import 'package:chocobi/screens/testCard.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
-import 'package:chocobi/data/money.dart';
-//import 'package:chocobi/screens/home.dart';
-//import 'package:chocobi/screens/profile.dart';
-//import 'package:chocobi/screens/testCard.dart';
-import 'package:chocobi/screens/buttonnav.dart';
-import 'package:chocobi/screens/drawer.dart';
-import 'package:chocobi/screens/settings.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class Transaction extends StatefulWidget {
-  const Transaction({super.key, required this.income_selected, required this.expense_selected});
+  Transaction({super.key, required this.income_selected, required this.expense_selected});
   final bool income_selected;
   final bool expense_selected;
 
@@ -63,6 +64,27 @@ class _TransactionState extends State<Transaction> {
     }).toList();
   }
 
+  void deleteItem(int position) {
+  var item = filteredData()[position];
+  all.remove(item);
+
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text('Item deleted'),
+      action: SnackBarAction(
+        label: 'Undo',
+        onPressed: () {
+          setState(() {
+            all.insert(position, item);
+          });
+        },
+      ),
+    ),
+  );
+
+  setState(() {});
+}
+
   @override
   void initState() {
     super.initState();
@@ -80,19 +102,11 @@ class _TransactionState extends State<Transaction> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 17, 80, 156), 
-        title: const Text(
+        title: Text(
           "Transaction History", 
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 18)
         ),
         centerTitle: true,
-        leading: Builder( ///
-          builder: (context) => IconButton(
-            onPressed: () {
-              Scaffold.of(context).openDrawer();
-            }, 
-            icon: const Icon(Icons.menu, color: Colors.white),
-          ),
-        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -134,7 +148,8 @@ class _TransactionState extends State<Transaction> {
                         history[1]["_selected"] = !history[1]["_selected"];
                       });
                     },
-                  )
+                  ),
+                  Expanded(child: SizedBox()),
                 ],
               ),
               Divider(),
@@ -175,57 +190,90 @@ class _TransactionState extends State<Transaction> {
                 child: ListView.builder(
                   itemCount: filteredData().length,
                   itemBuilder: (context, position) {
-                    if ((history[0]["_selected"] && filteredData()[position]["category"] == "income") ||
-                        (history[1]["_selected"] && filteredData()[position]["category"] == "expense")) {
-                      IconData iconData = filteredData()[position]["category"] == "income" ? Icons.arrow_drop_up : Icons.arrow_drop_down;
-                      Color iconColor = filteredData()[position]["category"] == "income" ? Colors.green : Colors.red;
+                    if ((history[0]["_selected"] &&
+                            filteredData()[position]["category"] == "income") ||
+                        (history[1]["_selected"] &&
+                            filteredData()[position]["category"] == "expense")) {
+                      IconData iconData = filteredData()[position]["category"] == "income"
+                          ? Icons.arrow_drop_up
+                          : Icons.arrow_drop_down;
+                      Color iconColor = filteredData()[position]["category"] == "income"
+                          ? Colors.green
+                          : Colors.red;
 
                       return Column(
                         children: [
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height/10,
-                            child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                          Slidable(
+                            actionExtentRatio: 0.3,
+                            key: Key(filteredData()[position].toString()),
+                            actionPane: SlidableDrawerActionPane(),
+                            secondaryActions: [
+                              IconSlideAction(
+                                caption: 'Delete',
+                                color: Colors.red,
+                                icon: Icons.delete,
+                                onTap: () {
+                                  deleteItem(position);
+                                },
+                                closeOnTap: true,
+                              ),
+                            ],
+                            child: SizedBox(
+                              height: MediaQuery.of(context).size.height / 10,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "${filteredData()[position]['date']}",
+                                        style: TextStyle(
+                                            fontSize: 18, fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        "${filteredData()[position]['description']}",
+                                        style: TextStyle(
+                                            color: iconColor, fontSize: 15),
+                                      ),
+                                    ],
+                                  ),
+                                  Container(
+                                    child: Row(
                                       children: [
-                                        Text("${filteredData()[position]['date']}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                                        Text("${filteredData()[position]['description']}", style: TextStyle(color: iconColor, fontSize: 15))
+                                        Container(
+                                          width: 130,
+                                          child: Text(
+                                            "Rp ${formatNumberWithThousandSeparator(all[position]['price'])}",
+                                            style: TextStyle(
+                                                color: iconColor, fontSize: 18),
+                                            textAlign: TextAlign.right,
+                                          ),
+                                        ),
+                                        Icon(iconData, color: iconColor, size: 40)
                                       ],
                                     ),
-                                    Container(
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            width: 130,
-                                            child: Text("Rp ${formatNumberWithThousandSeparator(all[position]['price'])}", style: TextStyle(color: iconColor, fontSize: 18), textAlign: TextAlign.right)
-                                          ),
-                                          Icon(iconData, color: iconColor, size: 40)
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                          Divider()
+                          Divider(), 
                         ],
                       );
-                    } 
-                    else {
+                    } else {
                       return SizedBox.shrink();
                     }
                   },
-                ),
+                )
               ),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: const CustomBottomAppBar(),
-      drawer: const CustomDrawer(),
+      bottomNavigationBar: CustomBottomAppBar()
     );
   }
 }
