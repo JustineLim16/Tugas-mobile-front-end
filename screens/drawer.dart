@@ -1,5 +1,4 @@
 ///
-import 'package:chocobi/screens/export.dart';
 import 'package:chocobi/screens/settings.dart';
 import 'package:chocobi/screens/welcome.dart';
 import 'package:flutter/material.dart';
@@ -107,10 +106,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
               leading: const Icon(Icons.upload),
               title: const Text('Export Data'),
               onTap: () {
-                Navigator.push(
+                /*Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => ExportSuccessPage()),
-                );
+                );*/
               },
             ),
             ListTile(
