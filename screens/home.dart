@@ -27,8 +27,6 @@ class _HomeScreenState extends State<Home> {
   num totalIncome = 0;
   num totalExpense = 0;
 
-  String? _radioValue = "";
-
   @override
   void initState() {
     super.initState();

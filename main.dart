@@ -1,8 +1,5 @@
 import 'package:chocobi/screens/customCircle.dart';
-import 'package:chocobi/screens/home.dart';
-import 'package:chocobi/screens/profile.dart';
 import 'package:chocobi/screens/settings.dart';
-import 'package:chocobi/screens/splashscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
