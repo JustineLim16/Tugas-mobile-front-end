@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:chocobi/screens/home.dart';
 import 'package:chocobi/screens/profile.dart';
 import 'package:chocobi/screens/transaction.dart';
-import 'package:chocobi/screens/testCard.dart';
 import 'package:provider/provider.dart';
 
 class CustomBottomAppBar extends StatefulWidget {

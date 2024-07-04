@@ -5,15 +5,13 @@ import 'package:chocobi/screens/settings.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:chocobi/data/money.dart';
 import 'package:chocobi/screens/profile.dart';
-import 'package:chocobi/screens/testCard.dart';
 import 'package:chocobi/screens/transaction.dart';
 import 'package:provider/provider.dart';
+import 'package:chocobi/screens/drawer.dart';
 
 class Home extends StatefulWidget {
   Home ({super.key});
@@ -56,15 +54,29 @@ class _HomeScreenState extends State<Home> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Color.fromARGB(255, 17, 80, 156),
+      
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 50, left: 20, right: 20),
-            child: Container(
+            padding: const EdgeInsets.only(top: 5, left: 20, right: 20),
+            child: SizedBox(
               width: double.infinity,
               child: Column(
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Builder(
+                        builder: (context) => IconButton(
+                          onPressed: () {
+                            Scaffold.of(context).openDrawer();
+                          }, 
+                          icon: const Icon(Icons.menu, color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -146,9 +158,7 @@ class _HomeScreenState extends State<Home> {
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text("Recent Incomes", style: TextStyle(color: Colors.green, fontSize: 16, fontWeight: FontWeight.bold)),
-                                      TextButton(onPressed: (){
-                                        showDialog(context: context, builder: (context){return const TestCard();});
-                                      }, child: TextButton(onPressed: (){Navigator.pushAndRemoveUntil(
+                                      TextButton(onPressed: (){}, child: TextButton(onPressed: (){Navigator.pushAndRemoveUntil(
                                         context,MaterialPageRoute(builder: (context) => Transaction(income_selected: true, expense_selected: false,)),
                                         ModalRoute.withName("/Home"));}, child: Text("View All", style: TextStyle(color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1]))),)
                                     ],
@@ -196,9 +206,7 @@ class _HomeScreenState extends State<Home> {
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text("Recent Expenses", style: TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.bold)),
-                                      TextButton(onPressed: (){
-                                        showDialog(context: context, builder: (context){return const TestCard();});
-                                      }, child: TextButton(onPressed: (){Navigator.pushAndRemoveUntil(
+                                      TextButton(onPressed: (){}, child: TextButton(onPressed: (){Navigator.pushAndRemoveUntil(
                                         context,MaterialPageRoute(builder: (context) => Transaction(income_selected: false, expense_selected: true,)),
                                         ModalRoute.withName("/Home"));}, child: Text("View All", style: TextStyle(color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1]))),)
                                     ],
@@ -321,7 +329,8 @@ class _HomeScreenState extends State<Home> {
             ),
           ],
         ),
-      bottomNavigationBar: CustomBottomAppBar()
+      bottomNavigationBar: CustomBottomAppBar(),
+      drawer: const CustomDrawer(),
     );
   }
 }

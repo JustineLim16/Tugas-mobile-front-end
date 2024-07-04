@@ -1,9 +1,6 @@
-import 'package:chocobi/screens/settings.dart';
 import 'package:flutter/material.dart';
-import 'package:chocobi/screens/home.dart';
-import 'package:chocobi/screens/testCard.dart';
-import 'package:chocobi/screens/transaction.dart';
-import 'package:provider/provider.dart';
+
+import 'package:chocobi/screens/settings.dart';
 import 'package:chocobi/screens/button_nav.dart';
 import 'package:chocobi/screens/export.dart';
 import 'package:chocobi/screens/welcome.dart';
@@ -60,7 +57,7 @@ class _ProfileState extends State<Profile> {
             leading: Icon(Icons.account_circle),
             title: Text('Account'),
             onTap: () {
-              // Aksi untuk 'Account'
+              
             },
           ),
           ListTile(
