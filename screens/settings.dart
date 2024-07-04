@@ -71,6 +71,7 @@ class SettingsPage extends StatelessWidget {
                     onChanged: (value) {
                       settings.isDarkMode = value;
                     },
+                    activeColor: Color.fromARGB(255, 17, 80, 156),
                   ),
                 ),
                 ListTile(
@@ -80,6 +81,7 @@ class SettingsPage extends StatelessWidget {
                     onChanged: (value) {
                       settings.pushNotifications = value;
                     },
+                    activeColor: Color.fromARGB(255, 17, 80, 156)
                   ),
                 ),
                 ListTile(
@@ -89,6 +91,7 @@ class SettingsPage extends StatelessWidget {
                     onChanged: (value) {
                       settings.soundNotifications = value;
                     },
+                    activeColor: Color.fromARGB(255, 17, 80, 156)
                   ),
                 ),
                 ListTile(

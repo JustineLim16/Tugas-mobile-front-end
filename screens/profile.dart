@@ -1,11 +1,9 @@
-//-- rencananya profile dipindah ke drawer
 import 'package:flutter/material.dart';
 
 import 'package:chocobi/screens/settings.dart';
-import 'package:chocobi/screens/buttonnav.dart';
-
+import 'package:chocobi/screens/button_nav.dart';
+import 'package:chocobi/screens/export.dart';
 import 'package:chocobi/screens/welcome.dart';
-import 'package:chocobi/screens/drawer.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -59,7 +57,7 @@ class _ProfileState extends State<Profile> {
             leading: Icon(Icons.account_circle),
             title: Text('Account'),
             onTap: () {
-              // Aksi untuk 'Account'
+              
             },
           ),
           ListTile(
@@ -153,7 +151,6 @@ class _ProfileState extends State<Profile> {
         ],
       ),
       bottomNavigationBar: CustomBottomAppBar(),
-      drawer : CustomDrawer() 
     );
   }
 }

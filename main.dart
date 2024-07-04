@@ -1,21 +1,19 @@
+import 'package:chocobi/screens/customCircle.dart';
+import 'package:chocobi/screens/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import 'package:chocobi/screens/home.dart';
-//import 'package:chocobi/screens/splashscreen.dart';
-import 'package:chocobi/screens/settings.dart';
 
 void main() {
   runApp(
     ChangeNotifierProvider(
       create: (context) => SettingsModel(),
-      child: const MyApp(),
+      child: MyApp(),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({ super.key });
+  const MyApp({ Key? key }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +21,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Chocobi',
       theme: Provider.of<SettingsModel>(context).isDarkMode  ? ThemeData.dark()  : ThemeData.light(),
-      home:  const HomePage(),
+      home:  CircularIndicatorPage(),
     );
   }
 }
