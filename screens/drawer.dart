@@ -1,8 +1,7 @@
-///
+import 'package:flutter/material.dart';
+
 import 'package:chocobi/screens/settings.dart';
 import 'package:chocobi/screens/welcome.dart';
-import 'package:flutter/material.dart';
-//import 'package:provider/provider.dart';
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({super.key});
@@ -25,62 +24,21 @@ class _CustomDrawerState extends State<CustomDrawer> {
           children: [
             Container(
               color: const Color.fromARGB(255, 17, 80, 156),
-              height: MediaQuery.of(context).size.height/4,
+              height: MediaQuery.of(context).size.height/3,
               child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
                   children: [
                     const CircleAvatar(
-                      radius: 51,
+                      radius: 64,
                       backgroundColor: Colors.black,
                       child: CircleAvatar(
-                        radius: 50,
+                        radius: 63,
                         backgroundImage: AssetImage('lib/assets/profile.jpg'),
                       ),
                     ),
-                    const SizedBox(width: 20),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            const Text(
-                              "Shinchan",
-                              style: TextStyle(
-                                fontSize: 22,
-                                color: Colors.white
-                              ),
-                            ),
-                            IconButton(onPressed: () {
-                              //--
-                            },
-                            icon: const Icon(
-                              Icons.edit_rounded,
-                              color: Colors.white,
-                              size: 18,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const Text(
-                          "shinchan@gmail.com",
-                          style: TextStyle(
-                            fontSize: 19,
-                            color: Colors.white,
-                            fontStyle: FontStyle.italic
-                          ),
-                        ),
-                        const Text(
-                          "08116075384",
-                          style: TextStyle(
-                            fontSize: 19,
-                            color: Colors.white,
-                            fontStyle: FontStyle.italic
-                          ),
-                        ),
-                      ],
-                    )
+                    const SizedBox(width: 16),
+                    Text('Shinchan')
                   ],
                 ),
               )
