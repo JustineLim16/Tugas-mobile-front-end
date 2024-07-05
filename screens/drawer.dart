@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'package:chocobi/screens/settings.dart';
-import 'package:chocobi/screens/welcome.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({super.key});
@@ -20,16 +18,17 @@ class _CustomDrawerState extends State<CustomDrawer> {
       width: MediaQuery.of(context).size.width * 0.75,
       child: Drawer(
         //-- rencananya profile pindah ke sini
-        child: ListView(
+        child: Column(
           children: [
             Container(
               color: const Color.fromARGB(255, 17, 80, 156),
+              width: double.infinity,
               height: MediaQuery.of(context).size.height/3,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
+              child: const Padding(
+                padding: EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    const CircleAvatar(
+                    CircleAvatar(
                       radius: 64,
                       backgroundColor: Colors.black,
                       child: CircleAvatar(
@@ -37,49 +36,27 @@ class _CustomDrawerState extends State<CustomDrawer> {
                         backgroundImage: AssetImage('lib/assets/profile.jpg'),
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    SizedBox(width: 16),
                     Text('Shinchan')
                   ],
                 ),
               )
             ),
-            ListTile(
-              leading: const Icon(Icons.account_circle),
-              title: const Text('Account'),
-              onTap: () {
-                //--
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('Settings'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SettingsPage()),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.upload),
-              title: const Text('Export Data'),
-              onTap: () {
-                /*Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ExportSuccessPage()),
-                );*/
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.exit_to_app),
-              title: const Text('Logout'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Welcome()),
-                );
-              },
-            ),
+            CarouselSlider.builder(
+              itemCount: 3,
+              itemBuilder:(context, index, realIndex) => 
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Card(
+                    child: Column(
+                      children: [
+                        Text('help')
+                      ],
+                    ),
+                  ),
+                ),
+              options: CarouselOptions()
+            )
           ],
         ),
       ),
