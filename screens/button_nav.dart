@@ -1,8 +1,10 @@
-import 'package:chocobi/screens/budget.dart';
-import 'package:chocobi/screens/settings.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart'; // Import DateFormat for date formatting
+import 'package:flutter/services.dart'; // Import flutter services
+import 'package:chocobi/screens/budget.dart';
 import 'package:chocobi/screens/home.dart';
 import 'package:chocobi/screens/profile.dart';
+import 'package:chocobi/screens/settings.dart';
 import 'package:chocobi/screens/transaction.dart';
 import 'package:provider/provider.dart';
 
@@ -41,7 +43,10 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
             backgroundColor: Color.fromARGB(255, 21, 96, 189),
             child: Icon(Icons.add, color: Colors.white),
             onPressed: () {
-              _showAddTransactionDialog(context); // Panggil fungsi yang menampilkan dialog
+              showDialog(
+                context: context,
+                builder: (BuildContext context) => AddTransactionDialog(),
+              );
             },
           ),
           _buildBottomAppBarItem(Icons.account_balance_wallet, 'Budget', () {
@@ -72,120 +77,162 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
       ],
     );
   }
+}
 
-  void _showAddTransactionDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Add Transaction"),
-          content: StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return Form(
-                key: _formKey,
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: ListTile(
-                              title: Text("Income"),
-                              leading: Radio<String>(
-                                value: "income",
-                                groupValue: _radioValue,
-                                onChanged: (String? value) {
-                                  setState(() => _radioValue = value);
-                                },
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: ListTile(
-                              title: Text("Expense"),
-                              leading: Radio<String>(
-                                value: "expense",
-                                groupValue: _radioValue,
-                                onChanged: (String? value) {
-                                  setState(() => _radioValue = value);
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      TextFormField(
-                        controller: _titleController,
-                        decoration: InputDecoration(
-                          hintText: "Masukkan Judul",
-                          enabledBorder: OutlineInputBorder(),
-                          focusedBorder: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter a title';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 10),
-                      TextFormField(
-                        controller: _amountController,
-                        decoration: InputDecoration(
-                          hintText: "Masukkan Jumlah",
-                          enabledBorder: OutlineInputBorder(),
-                          focusedBorder: OutlineInputBorder(),
-                        ),
-                        keyboardType: TextInputType.number,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter an amount';
-                          }
-                          if (double.tryParse(value) == null) {
-                            return 'Please enter a valid number';
-                          }
-                          if (double.parse(value) <= 0) {
-                            return 'Please enter a number greater than zero';
-                          }
-                          return null;
-                        },
-                      ),
-                    ],
+class AddTransactionDialog extends StatefulWidget {
+  @override
+  _AddTransactionDialogState createState() => _AddTransactionDialogState();
+}
+
+class _AddTransactionDialogState extends State<AddTransactionDialog> {
+  TextEditingController _titleController = TextEditingController();
+  TextEditingController _amountController = TextEditingController();
+  DateTime? _selectedDate;
+  String? _radioValue;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text("Add Transaction"),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: ListTile(
+                    title: Text("Income"),
+                    leading: Radio<String>(
+                      value: "income",
+                      groupValue: _radioValue,
+                      onChanged: (String? value) {
+                        setState(() => _radioValue = value);
+                      },
+                    ),
                   ),
                 ),
-              );
-            },
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  // If the form is valid, display a snackbar and add the transaction
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Processing Data')),
-                  );
-                  Navigator.pop(context); // Close the dialog
+                Expanded(
+                  child: ListTile(
+                    title: Text("Expense"),
+                    leading: Radio<String>(
+                      value: "expense",
+                      groupValue: _radioValue,
+                      onChanged: (String? value) {
+                        setState(() => _radioValue = value);
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            TextFormField(
+              controller: _titleController,
+              decoration: InputDecoration(
+                hintText: "Enter Title",
+                enabledBorder: OutlineInputBorder(),
+                focusedBorder: OutlineInputBorder(),
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a title';
                 }
+                return null;
               },
-              child: Text("ADD", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
             ),
-            TextButton(
-              onPressed: () => Navigator.pop(context), // Close the dialog when "CANCEL" button is pressed
-              child: Text("CANCEL", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+            SizedBox(height: 10),
+            TextFormField(
+              controller: _amountController,
+              decoration: InputDecoration(
+                hintText: "Enter Amount",
+                enabledBorder: OutlineInputBorder(),
+                focusedBorder: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.digitsOnly // Only allow digits
+              ],
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter an amount';
+                }
+                if (int.tryParse(value) == null) {
+                  return 'Please enter a valid number';
+                }
+                if (int.parse(value) <= 0) {
+                  return 'Please enter a number greater than zero';
+                }
+                return null;
+              },
             ),
+            ListTile(
+              title: Text("Select Date"),
+              trailing: Icon(Icons.calendar_today),
+              onTap: () {
+                _selectDateTime(context); // Call function to select date
+              },
+            ),
+            // Display selected date
+            if (_selectedDate != null)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Text(
+                      "Selected Date:",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    Text(
+                      DateFormat('yyyy-MM-dd').format(_selectedDate!),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
           ],
-        );
-      },
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context); // Close the dialog
+          },
+          child: Text("CANCEL"),
+        ),
+        TextButton(
+          onPressed: () {
+            if (_titleController.text.isEmpty || _amountController.text.isEmpty || _radioValue == null || _selectedDate == null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Please fill all fields')),
+              );
+            } else {
+              // Save or process the transaction using _selectedDate
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Processing Data')),
+              );
+              Navigator.pop(context); // Close the dialog
+            }
+          },
+          child: Text("ADD"),
+        ),
+      ],
     );
   }
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  Future<void> _selectDateTime(BuildContext context) async {
+    DateTime selectedDate = DateTime.now();
 
-  final TextEditingController _titleController = TextEditingController();
+    selectedDate = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    ) ?? selectedDate;
 
-  final TextEditingController _amountController = TextEditingController();
-
-  String? _radioValue;
+    setState(() {
+      _selectedDate = selectedDate; // Update selected date
+      _radioValue = null; // Reset radio button value
+    });
+  }
 }
