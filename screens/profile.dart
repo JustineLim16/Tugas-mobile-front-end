@@ -1,4 +1,4 @@
-import 'package:chocobi/screens/account.dart';
+import 'package:chocobi/screens/editProfile.dart';
 import 'package:chocobi/screens/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
