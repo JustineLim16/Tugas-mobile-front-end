@@ -1,23 +1,24 @@
 import 'dart:ui';
+import 'package:chocobi/data/account_data.dart';
 import 'package:chocobi/screens/button_nav.dart';
 import 'package:chocobi/screens/clock.dart';
 import 'package:chocobi/screens/settings.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:chocobi/data/money.dart';
 import 'package:chocobi/screens/profile.dart';
 import 'package:chocobi/screens/transaction.dart';
 import 'package:provider/provider.dart';
-import 'package:chocobi/screens/drawer.dart';
 
 class Home extends StatefulWidget {
-  Home ({super.key});
+  Home({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _HomeScreenState createState() => _HomeScreenState();
 }
 
@@ -26,7 +27,7 @@ class _HomeScreenState extends State<Home> {
   List dark = [Colors.black, Colors.white, Colors.grey[800]];
   num totalIncome = 0;
   num totalExpense = 0;
-
+  
   @override
   void initState() {
     super.initState();
@@ -52,29 +53,15 @@ class _HomeScreenState extends State<Home> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Color.fromARGB(255, 17, 80, 156),
-      
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 5, left: 20, right: 20),
-            child: SizedBox(
+            padding: const EdgeInsets.only(top: 50, left: 20, right: 20),
+            child: Container(
               width: double.infinity,
               child: Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Builder(
-                        builder: (context) => IconButton(
-                          onPressed: () {
-                            Scaffold.of(context).openDrawer();
-                          }, 
-                          icon: const Icon(Icons.menu, color: Colors.white),
-                        ),
-                      ),
-                    ],
-                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -82,30 +69,35 @@ class _HomeScreenState extends State<Home> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ClockWidget(),
-                          Text("Hello, Shinchan", style: TextStyle(fontSize: 13, color: Colors.white)),
+                          Text("Hello, ${Provider.of<ProfileNotifier>(context).accountInfo["name"]}", style: TextStyle(fontSize: 13, color: Colors.white)),
                           Text("Welcome Back", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white)),
                         ],
                       ),
                       ElevatedButton(
                         onPressed: () {
                           Navigator.pushAndRemoveUntil(
-                            context, MaterialPageRoute(builder: (context) => Profile()),
-                            ModalRoute.withName("/Home"));
+                            context,
+                            MaterialPageRoute(builder: (context) => Profile()),
+                            ModalRoute.withName("/Home"),
+                          );
                         },
                         child: CircleAvatar(
-                          backgroundImage: AssetImage('lib/assets/profile.jpg'),
                           radius: 35,
+                          backgroundImage: 
+                            Provider.of<ProfileNotifier>(context).accountInfo["picStatus"] == "asset" 
+                            ? AssetImage(Provider.of<ProfileNotifier>(context).accountInfo["profilePic"])
+                            : NetworkImage(Provider.of<ProfileNotifier>(context).accountInfo["profilePic"]) as ImageProvider,
                         ),
                         style: ElevatedButton.styleFrom(
-                          shape: CircleBorder()
+                          shape: CircleBorder(),
                         ),
-                      )
+                      ),
                     ],
                   ),
                   SizedBox(height: 20),
                   Container(
-                    width: double.infinity, 
-                    height: 100, 
+                    width: double.infinity,
+                    height: 100,
                     decoration: BoxDecoration(
                       color: Provider.of<SettingsModel>(context).isDarkMode ? dark[0] : light[0],
                       borderRadius: BorderRadius.circular(12),
@@ -122,11 +114,14 @@ class _HomeScreenState extends State<Home> {
                       child: Column(
                         children: [
                           Text("Account Balance", style: TextStyle(fontStyle: FontStyle.italic, fontSize: 15)),
-                          Text("Rp ${formatNumberWithThousandSeparator(totalIncome-totalExpense)}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 38))
+                          Text(
+                            "Rp ${formatNumberWithThousandSeparator(totalIncome - totalExpense)}",
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 38),
+                          ),
                         ],
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -156,9 +151,16 @@ class _HomeScreenState extends State<Home> {
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text("Recent Incomes", style: TextStyle(color: Colors.green, fontSize: 16, fontWeight: FontWeight.bold)),
-                                      TextButton(onPressed: (){}, child: TextButton(onPressed: (){Navigator.pushAndRemoveUntil(
-                                        context,MaterialPageRoute(builder: (context) => Transaction(income_selected: true, expense_selected: false,)),
-                                        ModalRoute.withName("/Home"));}, child: Text("View All", style: TextStyle(color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1]))),)
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => Transaction(income_selected: true, expense_selected: false)),
+                                            ModalRoute.withName("/Home"),
+                                          );
+                                        },
+                                        child: Text("View All", style: TextStyle(color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1])),
+                                      ),
                                     ],
                                   ),
                                   ...income.take(2).map((e) {
@@ -204,9 +206,16 @@ class _HomeScreenState extends State<Home> {
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text("Recent Expenses", style: TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.bold)),
-                                      TextButton(onPressed: (){}, child: TextButton(onPressed: (){Navigator.pushAndRemoveUntil(
-                                        context,MaterialPageRoute(builder: (context) => Transaction(income_selected: false, expense_selected: true,)),
-                                        ModalRoute.withName("/Home"));}, child: Text("View All", style: TextStyle(color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1]))),)
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => Transaction(income_selected: false, expense_selected: true)),
+                                            ModalRoute.withName("/Home"),
+                                          );
+                                        },
+                                        child: Text("View All", style: TextStyle(color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1])),
+                                      ),
                                     ],
                                   ),
                                   ...expense.take(2).map((e) {
@@ -244,25 +253,25 @@ class _HomeScreenState extends State<Home> {
                                   }),
                                 ],
                               ),
-                            )
-                          ]
+                            ),
+                          ],
                         ),
                       ),
-                    )
+                    ),
                   ),
                 ),
                 Positioned(
                   top: 0,
                   left: 25,
                   right: 25,
-                    child: Container(
-                      width: double.infinity,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        color: Provider.of<SettingsModel>(context).isDarkMode ? Colors.black.withOpacity(1) : light[0],
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
+                  child: Container(
+                    width: double.infinity,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: Provider.of<SettingsModel>(context).isDarkMode ? Colors.black.withOpacity(1) : light[0],
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
                             offset: Offset(0, 3),
                             blurRadius: 5,
                             color: Provider.of<SettingsModel>(context).isDarkMode ? Colors.white.withOpacity(0.2) : Colors.black.withOpacity(0.3),
@@ -327,8 +336,7 @@ class _HomeScreenState extends State<Home> {
             ),
           ],
         ),
-      bottomNavigationBar: CustomBottomAppBar(),
-      drawer: const CustomDrawer(),
+      bottomNavigationBar: CustomBottomAppBar()
     );
   }
 }
