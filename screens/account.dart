@@ -5,6 +5,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 
 import 'package:chocobi/data/money.dart';
+import 'package:chocobi/data/credits.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -59,6 +60,8 @@ class _AccountPageState extends State<AccountPage> {
     return formatter.format(number);
   }
 
+  int currentCard = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,30 +87,30 @@ class _AccountPageState extends State<AccountPage> {
                 padding: const EdgeInsets.all(16.0),
                 child: CarouselSlider.builder(
                   itemCount: 3,
-                  itemBuilder:(context, index, realIndex) => 
+                  itemBuilder: (context, index, realIndex) => 
                     SizedBox(
                       width: 256.0,
-                      child: const Card(
+                      child: Card(
                         child: Padding(
-                          padding: EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.all(16.0),
                           child: Column(
                             children: [
                               Row(
                                 children: [
-                                  Icon(Icons.credit_card),
-                                  SizedBox(width: 12.0),
-                                  Text('CIMB NIAGA')
+                                  const Icon(Icons.credit_card),
+                                  const SizedBox(width: 12.0),
+                                  Text(credits[index]['bank'])
                                 ], 
                               ),
-                              SizedBox(height: 28.0),
-                              Text('4284 1688 8888 8888'),
-                              Text('07/26'),
-                              SizedBox(height: 8.0),
+                              const SizedBox(height: 28.0),
+                              Text(credits[index]['number']),
+                              Text(credits[index]['expired']),
+                              const SizedBox(height: 8.0),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text('SHINNOSUKE NOHARA'),
-                                  SizedBox(
+                                  Text(credits[index]['name']),
+                                  const SizedBox(
                                     child: Row(
                                       children: [
                                         Icon(Icons.circle_outlined),
@@ -122,7 +125,15 @@ class _AccountPageState extends State<AccountPage> {
                         )
                       ),
                     ),
-                  options: CarouselOptions()
+                  options: CarouselOptions(
+                    onPageChanged : (index, reason) {
+                      setState(
+                        () {
+                          currentCard = index;
+                        }
+                      );
+                    }, 
+                  )
                 ),
               ),
             ),
@@ -134,14 +145,14 @@ class _AccountPageState extends State<AccountPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
+                  const Text(
                     'Account Information',
                     style: TextStyle(
                       fontSize: 16.0,
                       fontWeight: FontWeight.bold
                     ),
                   ),
-                  Divider(),
+                  const Divider(),
                   Card(
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -151,10 +162,10 @@ class _AccountPageState extends State<AccountPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('Account Status'),
+                              const Text('Account Status'),
                               Text(
-                                'Active',
-                                style: TextStyle(
+                                credits[currentCard]['status'],
+                                style: const TextStyle(
                                   fontWeight: FontWeight.bold
                                 ),
                               ),
@@ -163,10 +174,10 @@ class _AccountPageState extends State<AccountPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('Due Date'),
+                              const Text('Due Date'),
                               Text(
-                                '12-12-2024',
-                                style: TextStyle(
+                                credits[currentCard]['due'],
+                                style: const TextStyle(
                                   fontWeight: FontWeight.bold
                                 ),
                               ),
@@ -175,10 +186,12 @@ class _AccountPageState extends State<AccountPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('Current Balance'),
+                              const Text('Current Balance'),
                               Text(
-                                '\$ 245.23',
-                                style: TextStyle(
+                                '\$ ${
+                                  credits[currentCard]['balance']
+                                }',
+                                style: const TextStyle(
                                   fontWeight: FontWeight.bold
                                 ),
                               ),
@@ -253,7 +266,6 @@ class _AccountPageState extends State<AccountPage> {
                                                   filteredData()[position]['date']
                                                 ),
                                               style: const TextStyle(
-                                                fontSize: 18,
                                                 fontWeight: FontWeight.bold
                                               ),
                                             ),
@@ -280,7 +292,6 @@ class _AccountPageState extends State<AccountPage> {
                                                 }",
                                                 style: TextStyle(
                                                   color: iconColor,
-                                                  fontSize: 18
                                                 ),
                                                 textAlign: TextAlign.right,
                                               ),
