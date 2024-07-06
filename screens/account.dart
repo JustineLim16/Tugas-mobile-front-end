@@ -7,6 +7,8 @@ import 'package:intl/intl.dart';
 import 'package:chocobi/data/money.dart';
 import 'package:chocobi/data/credits.dart';
 
+import 'package:chocobi/screens/button_nav.dart';
+
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
 
@@ -65,22 +67,12 @@ class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 17, 80, 156),
-        title: const Text(
-          'Account Card',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(
-            flex: 30,
+            flex: 33,
             child: Container(
               color: const Color.fromARGB(255, 17, 80, 156),
               child: Padding(
@@ -139,7 +131,7 @@ class _AccountPageState extends State<AccountPage> {
             ),
           ),
           Expanded(
-            flex: 25,
+            flex: 24,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -155,7 +147,7 @@ class _AccountPageState extends State<AccountPage> {
                   const Divider(),
                   Card(
                     child: Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
@@ -206,9 +198,9 @@ class _AccountPageState extends State<AccountPage> {
             )
           ),
           Expanded(
-            flex: 35,
+            flex: 33,
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -252,7 +244,7 @@ class _AccountPageState extends State<AccountPage> {
                                   ),
                                   actionPane: const SlidableDrawerActionPane(),
                                   child: SizedBox(
-                                    height: MediaQuery.of(context).size.height / 10,
+                                    height: MediaQuery.of(context).size.height / 15,
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -340,6 +332,7 @@ class _AccountPageState extends State<AccountPage> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      bottomNavigationBar: const CustomBottomAppBar()
     );
   }
 }

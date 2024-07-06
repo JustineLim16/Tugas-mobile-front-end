@@ -1,7 +1,7 @@
+import 'package:chocobi/screens/account.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Import DateFormat for date formatting
 import 'package:flutter/services.dart'; // Import flutter services
-import 'package:chocobi/screens/budget.dart';
 import 'package:chocobi/screens/home.dart';
 import 'package:chocobi/screens/profile.dart';
 import 'package:chocobi/screens/settings.dart';
@@ -9,6 +9,8 @@ import 'package:chocobi/screens/transaction.dart';
 import 'package:provider/provider.dart';
 
 class CustomBottomAppBar extends StatefulWidget {
+  const CustomBottomAppBar({super.key});
+
   @override
   State<CustomBottomAppBar> createState() => _CustomBottomAppBarState();
 }
@@ -49,10 +51,10 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
               );
             },
           ),
-          _buildBottomAppBarItem(Icons.account_balance_wallet, 'Budget', () {
+          _buildBottomAppBarItem(Icons.account_balance_wallet, 'Account', () {
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (context) => Budget()),
+              MaterialPageRoute(builder: (context) => const AccountPage()),
               ModalRoute.withName("/Home"),
             );
           }),
