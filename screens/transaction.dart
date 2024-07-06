@@ -226,7 +226,7 @@ class _TransactionState extends State<Transaction> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "${filteredData()[position]['date']}",
+                                        "${DateFormat('yyyy-MM-dd').format(filteredData()[position]['date'])}",
                                         style: TextStyle(
                                             fontSize: 18, fontWeight: FontWeight.bold),
                                       ),
@@ -274,3 +274,4 @@ class _TransactionState extends State<Transaction> {
     );
   }
 }
+
