@@ -24,26 +24,59 @@ class _AccountPageState extends State<AccountPage> {
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Container(
-            color: const Color.fromARGB(255, 17, 80, 156),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: CarouselSlider.builder(
-                itemCount: 3,
-                itemBuilder:(context, index, realIndex) => 
-                  const Card(
-                    child: Text('oke kul kul'),
-                  ),
-                options: CarouselOptions()
+          Expanded(
+            flex: 3,
+            child: Container(
+              color: const Color.fromARGB(255, 17, 80, 156),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: CarouselSlider.builder(
+                  itemCount: 3,
+                  itemBuilder:(context, index, realIndex) => 
+                    SizedBox(
+                      width: 256.0,
+                      child: const Card(
+                        child: Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(Icons.password),
+                                  SizedBox(width: 16.0),
+                                  Text('CIMB NIAGA')
+                                ], 
+                              ),
+                              SizedBox(height: 16.0),
+                              Icon(Icons.sim_card_outlined),
+                              SizedBox(height: 8.0),
+                              Text('4284 1688 8888 8888')
+                            ],
+                          ),
+                        )
+                      ),
+                    ),
+                  options: CarouselOptions()
+                ),
               ),
             ),
           ),
-          SizedBox(
-            child: Text('oke kul')
+          Expanded(
+            flex: 3,
+            child: Column(
+              children: [
+                Text('Account Information')
+                
+              ],
+            )
           ),
-          SizedBox(
-            child: Text('oke kul'),
+          Expanded(
+            flex: 3,
+            child: SizedBox(
+              child: Text('oke kul'),
+            ),
           )
         ],
       ),
