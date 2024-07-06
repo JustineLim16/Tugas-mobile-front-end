@@ -1,9 +1,11 @@
-import 'package:flutter/material.dart';
-
+import 'package:chocobi/screens/account.dart';
 import 'package:chocobi/screens/settings.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:chocobi/screens/button_nav.dart';
 import 'package:chocobi/screens/export.dart';
 import 'package:chocobi/screens/welcome.dart';
+import 'package:chocobi/data/account_data.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -31,7 +33,9 @@ class _ProfileState extends State<Profile> {
                     backgroundColor: Colors.black,
                     child: CircleAvatar(
                       radius: 50,
-                      backgroundImage: AssetImage('lib/assets/profile.jpg'),
+                      backgroundImage: Provider.of<ProfileNotifier>(context).accountInfo["picStatus"] == "asset" 
+                            ? AssetImage(Provider.of<ProfileNotifier>(context).accountInfo["profilePic"])
+                            : NetworkImage(Provider.of<ProfileNotifier>(context).accountInfo["profilePic"]) as ImageProvider,
                     ),
                   ),
                   SizedBox(width: 20),
@@ -39,14 +43,9 @@ class _ProfileState extends State<Profile> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          Text("Shinchan", style: TextStyle(fontSize: 22, color: Colors.white)),
-                          IconButton(onPressed: (){}, icon: Icon(Icons.edit_rounded, color: Colors.white, size: 18,))
-                        ],
-                      ),
-                      Text("shinchan@gmail.com", style: TextStyle(fontSize: 19, color: Colors.white, fontStyle: FontStyle.italic)),
-                      Text("08116075384", style: TextStyle(fontSize: 19, color: Colors.white, fontStyle: FontStyle.italic)),
+                      Text((Provider.of<ProfileNotifier>(context).accountInfo["name"]), style: TextStyle(fontSize: 22, color: Colors.white)),    
+                      Text((Provider.of<ProfileNotifier>(context).accountInfo["email"]), style: TextStyle(fontSize: 19, color: Colors.white, fontStyle: FontStyle.italic)),
+                      Text((Provider.of<ProfileNotifier>(context).accountInfo["phone"]), style: TextStyle(fontSize: 19, color: Colors.white, fontStyle: FontStyle.italic)),
                     ],
                   )
                 ],
@@ -54,10 +53,13 @@ class _ProfileState extends State<Profile> {
             )
           ),
           ListTile(
-            leading: Icon(Icons.account_circle),
-            title: Text('Account'),
+            leading: Icon(Icons.person),
+            title: Text('Edit Profile'),
             onTap: () {
-              
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AccountPage()),
+              );
             },
           ),
           ListTile(
