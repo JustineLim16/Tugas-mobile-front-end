@@ -1,3 +1,4 @@
+import 'package:chocobi/data/money.dart';
 import 'package:chocobi/screens/account.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Import DateFormat for date formatting
@@ -91,6 +92,12 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
   TextEditingController _amountController = TextEditingController();
   DateTime? _selectedDate;
   String? _radioValue;
+  Map<String, dynamic> addData = {
+    "category": "",
+    "description": "",
+    "date": DateTime.now(),
+    "price": 0
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +117,10 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                       value: "income",
                       groupValue: _radioValue,
                       onChanged: (String? value) {
-                        setState(() => _radioValue = value);
+                        setState(() {
+                          _radioValue = value;
+                          addData["category"] = "income";
+                        });
                       },
                     ),
                   ),
@@ -122,7 +132,10 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                       value: "expense",
                       groupValue: _radioValue,
                       onChanged: (String? value) {
-                        setState(() => _radioValue = value);
+                        setState(() {
+                          _radioValue = value;
+                          addData["category"] = "expense";
+                        });
                       },
                     ),
                   ),
@@ -132,7 +145,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
             TextFormField(
               controller: _titleController,
               decoration: InputDecoration(
-                hintText: "Enter Title",
+                hintText: "Enter Description",
                 enabledBorder: OutlineInputBorder(),
                 focusedBorder: OutlineInputBorder(),
               ),
@@ -209,7 +222,12 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                 SnackBar(content: Text('Please fill all fields')),
               );
             } else {
-              // Save or process the transaction using _selectedDate
+              setState(() {
+                addData["description"] = _titleController.text;
+                addData["price"] = int.parse(_amountController.text);
+                addData["date"] = _selectedDate;
+              });
+              context.read<MoneyNotifier>().updateMoney(addData);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('Processing Data')),
               );
@@ -234,7 +252,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
 
     setState(() {
       _selectedDate = selectedDate; // Update selected date
-      _radioValue = null; // Reset radio button value
+      addData["date"] = selectedDate;
     });
   }
 }
