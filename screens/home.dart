@@ -27,20 +27,24 @@ class _HomeScreenState extends State<Home> {
   List dark = [Colors.black, Colors.white, Colors.grey[800]];
   num totalIncome = 0;
   num totalExpense = 0;
-  
-  @override
-  void initState() {
-    super.initState();
-    _calculateTotalPrice();
-  }
 
-  void _calculateTotalPrice() {
-    for (var item in income) {
+  void _calculateTotalPrice(MoneyNotifier moneyNotifier) {
+    totalIncome = 0;
+    totalExpense = 0;
+
+    for (var item in moneyNotifier.income) {
       totalIncome += item['price'];
     }
-    for (var item in expense) {
+    for (var item in moneyNotifier.expense) {
       totalExpense += item['price'];
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final moneyNotifier = Provider.of<MoneyNotifier>(context);
+    _calculateTotalPrice(moneyNotifier);
   }
 
   String formatNumberWithThousandSeparator(num number) {
@@ -50,6 +54,10 @@ class _HomeScreenState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    final profileNotifier = Provider.of<ProfileNotifier>(context);
+    final settingsModel = Provider.of<SettingsModel>(context);
+    final moneyNotifier = Provider.of<MoneyNotifier>(context);
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Color.fromARGB(255, 17, 80, 156),
@@ -69,7 +77,7 @@ class _HomeScreenState extends State<Home> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ClockWidget(),
-                          Text("Hello, ${Provider.of<ProfileNotifier>(context).accountInfo["name"]}", style: TextStyle(fontSize: 13, color: Colors.white)),
+                          Text("Hello, ${profileNotifier.accountInfo["name"]}", style: TextStyle(fontSize: 13, color: Colors.white)),
                           Text("Welcome Back", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white)),
                         ],
                       ),
@@ -84,9 +92,9 @@ class _HomeScreenState extends State<Home> {
                         child: CircleAvatar(
                           radius: 35,
                           backgroundImage: 
-                            Provider.of<ProfileNotifier>(context).accountInfo["picStatus"] == "asset" 
-                            ? AssetImage(Provider.of<ProfileNotifier>(context).accountInfo["profilePic"])
-                            : NetworkImage(Provider.of<ProfileNotifier>(context).accountInfo["profilePic"]) as ImageProvider,
+                            profileNotifier.accountInfo["picStatus"] == "asset" 
+                            ? AssetImage(profileNotifier.accountInfo["profilePic"])
+                            : NetworkImage(profileNotifier.accountInfo["profilePic"]) as ImageProvider,
                         ),
                         style: ElevatedButton.styleFrom(
                           shape: CircleBorder(),
@@ -99,7 +107,7 @@ class _HomeScreenState extends State<Home> {
                     width: double.infinity,
                     height: 100,
                     decoration: BoxDecoration(
-                      color: Provider.of<SettingsModel>(context).isDarkMode ? dark[0] : light[0],
+                      color: settingsModel.isDarkMode ? dark[0] : light[0],
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
@@ -136,7 +144,7 @@ class _HomeScreenState extends State<Home> {
                   child: Container(
                     height: double.infinity,
                     decoration: BoxDecoration(
-                      color: Provider.of<SettingsModel>(context).isDarkMode ? dark[0] : light[0],
+                      color: settingsModel.isDarkMode ? dark[0] : light[0],
                       borderRadius: BorderRadius.only(topLeft: Radius.circular(50), topRight: Radius.circular(50)),
                     ),
                     child: SingleChildScrollView(
@@ -159,18 +167,18 @@ class _HomeScreenState extends State<Home> {
                                             ModalRoute.withName("/Home"),
                                           );
                                         },
-                                        child: Text("View All", style: TextStyle(color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1])),
+                                        child: Text("View All", style: TextStyle(color: settingsModel.isDarkMode ? dark[1] : light[1])),
                                       ),
                                     ],
                                   ),
-                                  ...income.take(2).map((e) {
+                                  ...moneyNotifier.income.take(2).map((e) {
                                     return Column(
                                       children: [
                                         Card(
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(10),
                                           ),
-                                          color: Provider.of<SettingsModel>(context).isDarkMode ? dark[2] : light[2],
+                                          color: settingsModel.isDarkMode ? dark[2] : light[2],
                                           child: Container(
                                             height: MediaQuery.of(context).size.height / 16,
                                             child: ListTile(
@@ -179,14 +187,14 @@ class _HomeScreenState extends State<Home> {
                                                 "Rp ${formatNumberWithThousandSeparator(e['price'])}",
                                                 style: TextStyle(
                                                   fontSize: 17,
-                                                  color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1],
+                                                  color: settingsModel.isDarkMode ? dark[1] : light[1],
                                                 ),
                                               ),
                                               trailing: Text(
                                                 "${e["description"]}",
                                                 style: TextStyle(
                                                   fontSize: 15,
-                                                  color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : Colors.grey[600],
+                                                  color: settingsModel.isDarkMode ? dark[1] : Colors.grey[600],
                                                 ),
                                               ),
                                             ),
@@ -214,18 +222,18 @@ class _HomeScreenState extends State<Home> {
                                             ModalRoute.withName("/Home"),
                                           );
                                         },
-                                        child: Text("View All", style: TextStyle(color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1])),
+                                        child: Text("View All", style: TextStyle(color: settingsModel.isDarkMode ? dark[1] : light[1])),
                                       ),
                                     ],
                                   ),
-                                  ...expense.take(2).map((e) {
+                                  ...moneyNotifier.expense.take(2).map((e) {
                                     return Column(
                                       children: [
                                         Card(
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(10),
                                           ),
-                                          color: Provider.of<SettingsModel>(context).isDarkMode ? dark[2] : light[2],
+                                          color: settingsModel.isDarkMode ? dark[2] : light[2],
                                           child: Container(
                                             height: MediaQuery.of(context).size.height / 17,
                                             child: ListTile(
@@ -234,14 +242,14 @@ class _HomeScreenState extends State<Home> {
                                                 "Rp ${formatNumberWithThousandSeparator(e['price'])}",
                                                 style: TextStyle(
                                                   fontSize: 17,
-                                                  color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : light[1],
+                                                  color: settingsModel.isDarkMode ? dark[1] : light[1],
                                                 ),
                                               ),
                                               trailing: Text(
                                                 "${e["description"]}",
                                                 style: TextStyle(
                                                   fontSize: 15,
-                                                  color: Provider.of<SettingsModel>(context).isDarkMode ? dark[1] : Colors.grey[600],
+                                                  color: settingsModel.isDarkMode ? dark[1] : Colors.grey[600],
                                                 ),
                                               ),
                                             ),
@@ -268,13 +276,13 @@ class _HomeScreenState extends State<Home> {
                     width: double.infinity,
                     height: 100,
                     decoration: BoxDecoration(
-                      color: Provider.of<SettingsModel>(context).isDarkMode ? Colors.black.withOpacity(1) : light[0],
+                      color: settingsModel.isDarkMode ? Colors.black.withOpacity(1) : light[0],
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
                             offset: Offset(0, 3),
                             blurRadius: 5,
-                            color: Provider.of<SettingsModel>(context).isDarkMode ? Colors.white.withOpacity(0.2) : Colors.black.withOpacity(0.3),
+                            color: settingsModel.isDarkMode ? Colors.white.withOpacity(0.2) : Colors.black.withOpacity(0.3),
                           ),
                         ],
                       ),
@@ -289,7 +297,7 @@ class _HomeScreenState extends State<Home> {
                               children: [
                                 CircleAvatar(
                                   radius: 28,
-                                  backgroundColor: Provider.of<SettingsModel>(context).isDarkMode ? dark[2] : light[2],
+                                  backgroundColor: settingsModel.isDarkMode ? dark[2] : light[2],
                                   child: Icon(Icons.arrow_drop_up, size: 55, color: Colors.green)
                                 ),
                                 SizedBox(width: 5),
@@ -311,7 +319,7 @@ class _HomeScreenState extends State<Home> {
                               children: [
                                 CircleAvatar(
                                   radius: 28,
-                                  backgroundColor: Provider.of<SettingsModel>(context).isDarkMode ? dark[2] : light[2],
+                                  backgroundColor: settingsModel.isDarkMode ? dark[2] : light[2],
                                   child: Icon(Icons.arrow_drop_down, size: 55, color: Colors.red)
                                 ),
                                 SizedBox(width: 5),
