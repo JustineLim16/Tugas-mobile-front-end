@@ -40,11 +40,11 @@ class _TransactionState extends State<Transaction> {
 
   // Method to filter the data based on selected month and year
   List<Map<String, dynamic>> filteredData() {
-    return all.where((item) {
+    return Provider.of<MoneyNotifier>(context).all.where((item) {
       if (selectedMonth == "Month" && selectedYear == "Year") {
         return true; // No filter applied
       } else {
-        final DateTime date = DateTime.parse(item['date']);
+        final DateTime date = item['date'];
         final itemMonth = DateFormat('MMMM').format(date);
         final itemYear = DateFormat('yyyy').format(date);
         if (selectedMonth != "Month" && selectedYear != "Year") {
@@ -62,25 +62,25 @@ class _TransactionState extends State<Transaction> {
   }
 
   void deleteItem(int position) {
-  var item = filteredData()[position];
-  all.remove(item);
+    var item = filteredData()[position];
+    context.read<MoneyNotifier>().deleteMoney(item);
 
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text('Item deleted'),
-      action: SnackBarAction(
-        label: 'Undo',
-        onPressed: () {
-          setState(() {
-            all.insert(position, item);
-          });
-        },
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Item deleted'),
+        action: SnackBarAction(
+          label: 'Undo',
+          onPressed: () {
+            setState(() {
+              context.read<MoneyNotifier>().updateMoney(item);
+            });
+          },
+        ),
       ),
-    ),
-  );
+    );
 
-  setState(() {});
-}
+    setState(() {});
+  }
 
   @override
   void initState() {
@@ -243,7 +243,7 @@ class _TransactionState extends State<Transaction> {
                                         Container(
                                           width: 130,
                                           child: Text(
-                                            "Rp ${formatNumberWithThousandSeparator(all[position]['price'])}",
+                                            "Rp ${formatNumberWithThousandSeparator(Provider.of<MoneyNotifier>(context).all[position]['price'])}",
                                             style: TextStyle(
                                                 color: iconColor, fontSize: 18),
                                             textAlign: TextAlign.right,
@@ -274,4 +274,3 @@ class _TransactionState extends State<Transaction> {
     );
   }
 }
-
