@@ -1,8 +1,11 @@
+// sebelumnya: signup.dart
 import 'dart:async';
+import 'package:Chocobi/data/account_data.dart';
 import 'package:flutter/material.dart';
 
-import 'package:chocobi/data/users.dart';
-import 'package:chocobi/screens/profile.dart';
+import 'package:Chocobi/data/users.dart';
+import 'package:Chocobi/screens/profile.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -15,7 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   final _usernameControl = TextEditingController();
   final _passwordControl  = TextEditingController();
   String _statusText = '';
-  bool _widgetDisabled = false;
+  bool _buttonDisabled = false;
   
   @override
   Widget build(BuildContext context) {
@@ -39,7 +42,6 @@ class _LoginPageState extends State<LoginPage> {
                 border: OutlineInputBorder(),
                 hintText: 'Enter username'
               ),
-              readOnly: _widgetDisabled,
               controller: _usernameControl,
             ),
             const SizedBox(height: 20),
@@ -49,14 +51,7 @@ class _LoginPageState extends State<LoginPage> {
                 hintText: 'Enter password'
               ),
               obscureText: true,
-              readOnly: _widgetDisabled,
               controller: _passwordControl,
-            ),
-            const SizedBox(height: 15),
-            TextButton(onPressed: _widgetDisabled ? null : () {
-                //-- page untuk ganti password, autentikasi dsb.
-              },
-              child: const Text('Forgot password?'),
             ),
             const SizedBox(height: 20),
             Text(_statusText, style: const TextStyle(fontSize: 14)),
@@ -64,12 +59,15 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
       actions: [
-        TextButton(onPressed: _widgetDisabled ? null : () {
+        TextButton(onPressed: _buttonDisabled ? null : () {
           if (users.any((key) => key['username'] == _usernameControl.text
               && key['password'] == _passwordControl.text)) {
                 setState(() {
+                  context.read<ProfileNotifier>().updateProfileData("name", _usernameControl.text);
+                  String email = users[users.indexWhere((element) => element["username"] == _usernameControl.text && element["password"] == _passwordControl.text)]["email"];
+                  context.read<ProfileNotifier>().updateProfileData("email", email);
                   _statusText = 'Welcome back, you are being redirected..';
-                  _widgetDisabled = true;
+                  _buttonDisabled = true;
                 });
                 Timer(
                   const Duration(seconds: 3), () {
@@ -90,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
           },
           child: const Text('Log In')
         ),
-        TextButton(onPressed: _widgetDisabled ? null : () {
+        TextButton(onPressed: _buttonDisabled ? null : () {
             Navigator.pop(context, true);
           },
           child: const Text('Cancel')
