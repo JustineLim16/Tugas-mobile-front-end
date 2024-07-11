@@ -1,10 +1,10 @@
 // sebelumnya: signup.dart
 import 'dart:async';
-import 'package:Chocobi/data/account_data.dart';
+import 'package:chocobi/data/account_data.dart';
 import 'package:flutter/material.dart';
 
-import 'package:Chocobi/data/users.dart';
-import 'package:Chocobi/screens/profile.dart';
+import 'package:chocobi/data/users.dart';
+import 'package:chocobi/screens/profile.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {

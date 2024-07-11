@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 import 'package:chocobi/data/money.dart';
@@ -17,46 +19,6 @@ class AccountPage extends StatefulWidget {
 }
 
 class _AccountPageState extends State<AccountPage> {
-  List <String> month = ["Month", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  List <String> year = ["Year", "2021", "2022", "2023", "2024"];
-
-  List<Map<String, dynamic>> history = [
-    {
-      "category": "income",
-      "_selected": true
-    },
-    {
-      "category": "expense",
-      "_selected": true
-    }
-  ];
-
-  String selectedMonth = "Month";
-  String selectedYear = "Year";
-
-  // Method to filter the data based on selected month and year
-  List<Map<String, dynamic>> filteredData() {
-    return all.where((item) {
-      if (selectedMonth == "Month" && selectedYear == "Year") {
-        return true; // No filter applied
-      } else {
-        final DateTime date = DateTime.parse(item['date']);
-        final itemMonth = DateFormat('MMMM').format(date);
-        final itemYear = DateFormat('yyyy').format(date);
-        if (selectedMonth != "Month" && selectedYear != "Year") {
-          return itemMonth == selectedMonth && itemYear == selectedYear;
-        }
-        if (selectedMonth != "Month" && selectedYear == "Year") {
-          return itemMonth == selectedMonth;
-        }
-        if (selectedMonth == "Month" && selectedYear != "Year") {
-          return itemYear == selectedYear;
-        }
-        return false;
-      }
-    }).toList();
-  }
-
   String formatNumberWithThousandSeparator(num number) {
     final formatter = NumberFormat('#,##0', 'id');
     return formatter.format(number);
@@ -78,7 +40,7 @@ class _AccountPageState extends State<AccountPage> {
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: CarouselSlider.builder(
-                  itemCount: 3,
+                  itemCount: credits.length,
                   itemBuilder: (context, index, realIndex) => 
                     SizedBox(
                       width: 256.0,
@@ -137,12 +99,21 @@ class _AccountPageState extends State<AccountPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Text(
-                    'Account Information',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Account Information',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.refresh)
+                      )
+                    ],
                   ),
                   const Divider(),
                   Card(
@@ -214,23 +185,21 @@ class _AccountPageState extends State<AccountPage> {
                   const Divider(),
                   Expanded(
                     child: ListView.builder(
-                        itemCount: filteredData().length,
+                        itemCount: Provider.of<MoneyNotifier>(context).all.length,
                         itemBuilder: (context, position) {
                           if (
                             (
-                              history[0]["_selected"] &&
-                              filteredData()[position]["category"] == "income"
+                              Provider.of<MoneyNotifier>(context).all[position]["category"] == "income"
                             ) ||
                             (
-                              history[1]["_selected"] &&
-                              filteredData()[position]["category"] == "expense"
+                              Provider.of<MoneyNotifier>(context).all[position]["category"] == "expense"
                             )
                           ) {
-                            IconData iconData = filteredData()[position]["category"]
+                            IconData iconData = Provider.of<MoneyNotifier>(context).all[position]["category"]
                             == "income"
                                 ? Icons.arrow_drop_up
                                 : Icons.arrow_drop_down;
-                            Color iconColor = filteredData()[position]["category"]
+                            Color iconColor = Provider.of<MoneyNotifier>(context).all[position]["category"]
                             == "income"
                                 ? Colors.green
                                 : Colors.red;
@@ -240,7 +209,7 @@ class _AccountPageState extends State<AccountPage> {
                                 Slidable(
                                   actionExtentRatio: 0.3,
                                   key: Key(
-                                    filteredData()[position].toString()
+                                    Provider.of<MoneyNotifier>(context).all[position].toString()
                                   ),
                                   actionPane: const SlidableDrawerActionPane(),
                                   child: SizedBox(
@@ -255,7 +224,7 @@ class _AccountPageState extends State<AccountPage> {
                                           children: [
                                             Text(
                                               DateFormat('yyyy-MM-dd').format(
-                                                  filteredData()[position]['date']
+                                                  Provider.of<MoneyNotifier>(context).all[position]['date']
                                                 ),
                                               style: const TextStyle(
                                                 fontWeight: FontWeight.bold
@@ -263,7 +232,7 @@ class _AccountPageState extends State<AccountPage> {
                                             ),
                                             Text(
                                               "${
-                                                filteredData()[position]['description']
+                                                Provider.of<MoneyNotifier>(context).all[position]['description']
                                               }",
                                               style: TextStyle(
                                                 color: iconColor,
@@ -279,7 +248,7 @@ class _AccountPageState extends State<AccountPage> {
                                               child: Text(
                                                 "Rp ${
                                                   formatNumberWithThousandSeparator(
-                                                    all[position]['price']
+                                                    Provider.of<MoneyNotifier>(context).all[position]['price']
                                                   )
                                                 }",
                                                 style: TextStyle(
@@ -327,7 +296,194 @@ class _AccountPageState extends State<AccountPage> {
             )
           ),
           onPressed: () {
-        
+            showDialog(
+              context: context, builder: (BuildContext context) {
+                final numberControl = TextEditingController();
+                final nameControl = TextEditingController();
+                final expirationControl  = TextEditingController();
+                
+                String selectedBank = 'CIMB Niaga';
+                String statusText = '';
+                DateTime? dueDate;
+
+                return StatefulBuilder(
+                  builder: (BuildContext context, StateSetter setState) {
+                    Future<void> selectDateTime(BuildContext context) async {
+                      DateTime selectedDate = DateTime.now();
+
+                      selectedDate = await showDatePicker(
+                        context: context,
+                        initialDate: selectedDate,
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2101),
+                      ) ?? selectedDate;
+                    
+                      setState(
+                        () {
+                          dueDate = selectedDate;
+                        }
+                      );
+                    }
+                    return AlertDialog(
+                      alignment: Alignment.center,
+                      content: SizedBox(
+                        width: double.maxFinite,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Add Credit Card',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold
+                              )
+                            ),
+                            const SizedBox(height: 30),
+                            const Text('Bank Name'),
+                            DropdownButton<String>(
+                              isExpanded: true,
+                              value: selectedBank,
+                              onChanged: (newValue) {
+                                setState(
+                                  () {
+                                    selectedBank = newValue!;
+                                  }
+                                );
+                              },
+                              items: <String>['CIMB Niaga', 'BCA', 'BRI', 'Mandiri']
+                              .map<DropdownMenuItem<String>>(
+                                (String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }
+                              ).toList(),
+                            ),
+                            const SizedBox(height: 10),
+                            TextField(
+                              decoration: const InputDecoration(
+                                labelText: "Credit Card Number",
+                                hintText: '0000-0000-0000-0000',
+                                floatingLabelBehavior: FloatingLabelBehavior.auto,
+                                border: OutlineInputBorder(),
+                              ),
+                              maxLength: 19,
+                              controller: numberControl,
+                            ),
+                            const SizedBox(height: 20),
+                            TextField(
+                              decoration: const InputDecoration(
+                                labelText: "Expiration Date",
+                                hintText: 'MM/YY',
+                                floatingLabelBehavior: FloatingLabelBehavior.auto,
+                                border: OutlineInputBorder(),
+                              ),
+                              maxLength: 5,
+                              controller: expirationControl,
+                            ),
+                            const SizedBox(height: 20),
+                            TextField(
+                              decoration: const InputDecoration(
+                                labelText: "Cardholder's Name",
+                                hintText: 'e.g. SAMSUDIN',
+                                floatingLabelBehavior: FloatingLabelBehavior.auto,
+                                border: OutlineInputBorder(),
+                              ),
+                              controller: nameControl,
+                            ),
+                            const SizedBox(height: 20),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text('Due Date'),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    if (dueDate != null)
+                                    Text(
+                                      DateFormat('dd-MM-yyyy').format(dueDate!)
+                                    ),
+                                    const SizedBox(width: 5),
+                                    IconButton(
+                                      onPressed: () {
+                                        setState(
+                                          () {
+                                            selectDateTime(context);
+                                          }
+                                        );
+                                      },
+                                      icon: const Icon(Icons.calendar_month_outlined)
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                            const SizedBox(height: 20),
+                            Text(statusText, style: const TextStyle(fontSize: 14)),
+                          ],
+                        )
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            if (numberControl.text.length == 19
+                                && numberControl.text.contains('-')
+                                && expirationControl.text.length == 5
+                                && expirationControl.text.contains('/')
+                                && nameControl.text.isNotEmpty
+                                && dueDate != null) {
+                              
+                              if(credits.any((key) => key['number'] == numberControl.text)) {
+                                setState(
+                                  () {
+                                    statusText = 'Number already registered, try a different one';
+                                  }
+                                );
+                              }
+                              else {
+                                credits.addAll(
+                                  [{
+                                    "bank": selectedBank,
+                                    "number": numberControl.text,
+                                    "expired": expirationControl.text,
+                                    "name" : nameControl.text,
+                                    "status" : "Active",
+                                    "due" : DateFormat('dd-MM-yyyy').format(dueDate!).toString(),
+                                    "balance" : 500
+                                  }]
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Credit Card Added')
+                                  ),
+                                );
+                                Navigator.pop(context, true);
+                              }
+                            }
+                            else {
+                              setState(
+                                () {
+                                  statusText = 'Something\'s missing, please try again';
+                                }
+                              );
+                            }
+                          },
+                          child: const Text('Add')
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context, true);
+                          },
+                          child: const Text('Cancel')
+                        ),
+                      ],
+                    );
+                  }
+                );
+              },
+            );
           }
         ),
       ),
