@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class ProfileNotifier extends ChangeNotifier {
-  Map<String, dynamic> _accountInfo = {
+  final Map<String, dynamic> _accountInfo = {
     "profilePic": "lib/assets/profile.jpg",
-    "name": "Shinchan",
-    "email": "shinchan@gmail.com",
-    "phone": "08116075384",
+    "name": "",
+    "email": "",
+    "phone": "-",
     "picStatus": "asset"
   };
 
