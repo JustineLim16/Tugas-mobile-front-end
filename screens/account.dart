@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 import 'package:chocobi/data/money.dart';
@@ -17,45 +18,15 @@ class AccountPage extends StatefulWidget {
 }
 
 class _AccountPageState extends State<AccountPage> {
-  List <String> month = ["Month", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  List <String> year = ["Year", "2021", "2022", "2023", "2024"];
+  final _usernameControl = TextEditingController();
+  final _emailControl = TextEditingController();
+  final _passwordControl  = TextEditingController();
+  final _phoneControl  = TextEditingController();
+  final _verificationControl = TextEditingController();
 
-  List<Map<String, dynamic>> history = [
-    {
-      "category": "income",
-      "_selected": true
-    },
-    {
-      "category": "expense",
-      "_selected": true
-    }
-  ];
+  String _statusText = '';
+  bool _widgetDisabled = false;
 
-  String selectedMonth = "Month";
-  String selectedYear = "Year";
-
-  // Method to filter the data based on selected month and year
-  List<Map<String, dynamic>> filteredData() {
-    return all.where((item) {
-      if (selectedMonth == "Month" && selectedYear == "Year") {
-        return true; // No filter applied
-      } else {
-        final DateTime date = DateTime.parse(item['date']);
-        final itemMonth = DateFormat('MMMM').format(date);
-        final itemYear = DateFormat('yyyy').format(date);
-        if (selectedMonth != "Month" && selectedYear != "Year") {
-          return itemMonth == selectedMonth && itemYear == selectedYear;
-        }
-        if (selectedMonth != "Month" && selectedYear == "Year") {
-          return itemMonth == selectedMonth;
-        }
-        if (selectedMonth == "Month" && selectedYear != "Year") {
-          return itemYear == selectedYear;
-        }
-        return false;
-      }
-    }).toList();
-  }
 
   String formatNumberWithThousandSeparator(num number) {
     final formatter = NumberFormat('#,##0', 'id');
@@ -214,23 +185,21 @@ class _AccountPageState extends State<AccountPage> {
                   const Divider(),
                   Expanded(
                     child: ListView.builder(
-                        itemCount: filteredData().length,
+                        itemCount: Provider.of<MoneyNotifier>(context).all.length,
                         itemBuilder: (context, position) {
                           if (
                             (
-                              history[0]["_selected"] &&
-                              filteredData()[position]["category"] == "income"
+                              Provider.of<MoneyNotifier>(context).all[position]["category"] == "income"
                             ) ||
                             (
-                              history[1]["_selected"] &&
-                              filteredData()[position]["category"] == "expense"
+                              Provider.of<MoneyNotifier>(context).all[position]["category"] == "expense"
                             )
                           ) {
-                            IconData iconData = filteredData()[position]["category"]
+                            IconData iconData = Provider.of<MoneyNotifier>(context).all[position]["category"]
                             == "income"
                                 ? Icons.arrow_drop_up
                                 : Icons.arrow_drop_down;
-                            Color iconColor = filteredData()[position]["category"]
+                            Color iconColor = Provider.of<MoneyNotifier>(context).all[position]["category"]
                             == "income"
                                 ? Colors.green
                                 : Colors.red;
@@ -240,7 +209,7 @@ class _AccountPageState extends State<AccountPage> {
                                 Slidable(
                                   actionExtentRatio: 0.3,
                                   key: Key(
-                                    filteredData()[position].toString()
+                                    Provider.of<MoneyNotifier>(context).all[position].toString()
                                   ),
                                   actionPane: const SlidableDrawerActionPane(),
                                   child: SizedBox(
@@ -255,7 +224,7 @@ class _AccountPageState extends State<AccountPage> {
                                           children: [
                                             Text(
                                               DateFormat('yyyy-MM-dd').format(
-                                                  filteredData()[position]['date']
+                                                  Provider.of<MoneyNotifier>(context).all[position]['date']
                                                 ),
                                               style: const TextStyle(
                                                 fontWeight: FontWeight.bold
@@ -263,7 +232,7 @@ class _AccountPageState extends State<AccountPage> {
                                             ),
                                             Text(
                                               "${
-                                                filteredData()[position]['description']
+                                                Provider.of<MoneyNotifier>(context).all[position]['description']
                                               }",
                                               style: TextStyle(
                                                 color: iconColor,
@@ -279,7 +248,7 @@ class _AccountPageState extends State<AccountPage> {
                                               child: Text(
                                                 "Rp ${
                                                   formatNumberWithThousandSeparator(
-                                                    all[position]['price']
+                                                    Provider.of<MoneyNotifier>(context).all[position]['price']
                                                   )
                                                 }",
                                                 style: TextStyle(
@@ -327,7 +296,57 @@ class _AccountPageState extends State<AccountPage> {
             )
           ),
           onPressed: () {
-        
+            showDialog(
+              context: context, builder: (context) {
+                return AlertDialog(
+                  alignment: Alignment.center,
+                  content: SizedBox(
+                    width: double.maxFinite,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Chocobi - Log In',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold
+                        )
+                      ),
+                      const SizedBox(height: 30),
+                      TextField(
+                        decoration: const InputDecoration(
+                          labelText: "Username",
+                          floatingLabelBehavior: FloatingLabelBehavior.auto,
+                          border: OutlineInputBorder(),
+                        ),
+                        readOnly: _widgetDisabled,
+                        controller: _usernameControl,
+                      ),
+                      const SizedBox(height: 20),
+                      TextField(
+                        decoration: const InputDecoration(
+                          labelText: "Password",
+                          floatingLabelBehavior: FloatingLabelBehavior.auto,
+                          border: OutlineInputBorder(),
+                        ),
+                        obscureText: true,
+                        readOnly: _widgetDisabled,
+                        controller: _passwordControl,
+                      ),
+                      const SizedBox(height: 15),
+                      TextButton(onPressed: _widgetDisabled ? null : () {
+                          //-- page untuk ganti password, autentikasi dsb.
+                        },
+                        child: const Text('Forgot password?'),
+                      ),
+                      const SizedBox(height: 20),
+                      Text(_statusText, style: const TextStyle(fontSize: 14)),
+                      ],
+                    )
+                  ),
+                );
+              },
+            );
           }
         ),
       ),

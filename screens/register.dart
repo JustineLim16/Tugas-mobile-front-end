@@ -69,6 +69,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 30),
                 TextField(
                   decoration: const InputDecoration(
+                    labelText: "Username",
+                    floatingLabelBehavior: FloatingLabelBehavior.auto,
                     border: OutlineInputBorder(),
                     hintText: 'Enter new username'
                   ),
@@ -77,6 +79,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 20),
                 TextField(
                   decoration: const InputDecoration(
+                    labelText: "Email",
+                    floatingLabelBehavior: FloatingLabelBehavior.auto,
                     border: OutlineInputBorder(),
                     hintText: 'Enter registered email'
                   ),
@@ -85,6 +89,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 20),
                 TextField(
                   decoration: const InputDecoration(
+                    labelText: "Phone",
+                    floatingLabelBehavior: FloatingLabelBehavior.auto,
                     border: OutlineInputBorder(),
                     hintText: 'Enter registered phone number'
                   ),
@@ -93,6 +99,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 20),
                 TextField(
                   decoration: const InputDecoration(
+                    labelText: "Password",
+                    floatingLabelBehavior: FloatingLabelBehavior.auto,
                     border: OutlineInputBorder(),
                     hintText: 'Enter new password'
                   ),

@@ -36,8 +36,9 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 30),
             TextField(
               decoration: const InputDecoration(
+                labelText: "Username",
+                floatingLabelBehavior: FloatingLabelBehavior.auto,
                 border: OutlineInputBorder(),
-                hintText: 'Enter username'
               ),
               readOnly: _widgetDisabled,
               controller: _usernameControl,
@@ -45,8 +46,9 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 20),
             TextField(
               decoration: const InputDecoration(
+                labelText: "Password",
+                floatingLabelBehavior: FloatingLabelBehavior.auto,
                 border: OutlineInputBorder(),
-                hintText: 'Enter password'
               ),
               obscureText: true,
               readOnly: _widgetDisabled,
