@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:chocobi/data/account_data.dart';
+import 'package:Chocobi/data/account_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -176,6 +176,32 @@ class _AccountPageState extends State<AccountPage> {
               ),
             ],
           ),
+        ),
+      ),
+      floatingActionButton: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.75,
+        height: 48.0,
+        child: FloatingActionButton(
+          backgroundColor: const Color.fromARGB(255, 17, 80, 156),
+          child: const Text(
+            'Save Profile',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.white
+            )
+          ),
+          onPressed: () {
+            if (_nameEditingController.text.isNotEmpty) {
+              context.read<ProfileNotifier>().updateProfileData("name", _nameEditingController.text);
+            }
+            if (_emailEditingController.text.isNotEmpty && emailValidity == true) {
+              context.read<ProfileNotifier>().updateProfileData("email", _emailEditingController.text);
+            }
+            if (_phoneEditingController.text.isNotEmpty && phoneValidity == true) {
+              context.read<ProfileNotifier>().updateProfileData("phone", _phoneEditingController.text);;
+            }
+            return;
+          }
         ),
       ),
     );
