@@ -107,11 +107,9 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Column(
               children: [
-                Expanded(
-                  child: ListTile(
+                ListTile(
                     title: Text("Income"),
                     leading: Radio<String>(
                       value: "income",
@@ -124,9 +122,7 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                       },
                     ),
                   ),
-                ),
-                Expanded(
-                  child: ListTile(
+                ListTile(
                     title: Text("Expense"),
                     leading: Radio<String>(
                       value: "expense",
@@ -139,7 +135,6 @@ class _AddTransactionDialogState extends State<AddTransactionDialog> {
                       },
                     ),
                   ),
-                ),
               ],
             ),
             TextFormField(
