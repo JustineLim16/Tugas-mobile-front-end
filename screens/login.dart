@@ -66,6 +66,8 @@ class _LoginPageState extends State<LoginPage> {
                   context.read<ProfileNotifier>().updateProfileData("name", _usernameControl.text);
                   String email = users[users.indexWhere((element) => element["username"] == _usernameControl.text && element["password"] == _passwordControl.text)]["email"];
                   context.read<ProfileNotifier>().updateProfileData("email", email);
+                  String phone = users[users.indexWhere((element) => element["username"] == _usernameControl.text && element["password"] == _passwordControl.text)]["phone"];
+                  context.read<ProfileNotifier>().updateProfileData("phone", phone);
                   _statusText = 'Welcome back, you are being redirected..';
                   _buttonDisabled = true;
                 });
