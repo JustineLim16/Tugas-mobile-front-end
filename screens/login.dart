@@ -18,7 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   final _usernameControl = TextEditingController();
   final _passwordControl  = TextEditingController();
   String _statusText = '';
-  bool _buttonDisabled = false;
+  bool _widgetDisabled = false;
   
   @override
   Widget build(BuildContext context) {
@@ -42,6 +42,7 @@ class _LoginPageState extends State<LoginPage> {
                 border: OutlineInputBorder(),
                 hintText: 'Enter username'
               ),
+              readOnly: _widgetDisabled,
               controller: _usernameControl,
             ),
             const SizedBox(height: 20),
@@ -51,6 +52,7 @@ class _LoginPageState extends State<LoginPage> {
                 hintText: 'Enter password'
               ),
               obscureText: true,
+              readOnly: _widgetDisabled,
               controller: _passwordControl,
             ),
             const SizedBox(height: 20),
@@ -59,17 +61,18 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
       actions: [
-        TextButton(onPressed: _buttonDisabled ? null : () {
+        TextButton(onPressed: _widgetDisabled ? null : () {
           if (users.any((key) => key['username'] == _usernameControl.text
               && key['password'] == _passwordControl.text)) {
                 setState(() {
+                  _widgetDisabled = true;
                   context.read<ProfileNotifier>().updateProfileData("name", _usernameControl.text);
                   String email = users[users.indexWhere((element) => element["username"] == _usernameControl.text && element["password"] == _passwordControl.text)]["email"];
                   context.read<ProfileNotifier>().updateProfileData("email", email);
                   String phone = users[users.indexWhere((element) => element["username"] == _usernameControl.text && element["password"] == _passwordControl.text)]["phone"];
                   context.read<ProfileNotifier>().updateProfileData("phone", phone);
                   _statusText = 'Welcome back, you are being redirected..';
-                  _buttonDisabled = true;
+                  _widgetDisabled = true;
                 });
                 Timer(
                   const Duration(seconds: 3), () {
@@ -90,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
           },
           child: const Text('Log In')
         ),
-        TextButton(onPressed: _buttonDisabled ? null : () {
+        TextButton(onPressed: _widgetDisabled ? null : () {
             Navigator.pop(context, true);
           },
           child: const Text('Cancel')

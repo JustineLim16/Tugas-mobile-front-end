@@ -42,15 +42,20 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
               ModalRoute.withName("/Home"),
             );
           }),
-          FloatingActionButton(
-            backgroundColor: Color.fromARGB(255, 21, 96, 189),
-            child: Icon(Icons.add, color: Colors.white),
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) => AddTransactionDialog(),
-              );
-            },
+          Tooltip(
+            message: 'Add Transaction',
+            preferBelow: false,
+            verticalOffset: 35,
+            child: FloatingActionButton(
+              backgroundColor: Color.fromARGB(255, 21, 96, 189),
+              child: Icon(Icons.add, color: Colors.white),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) => AddTransactionDialog(),
+                );
+              },
+            ),
           ),
           _buildBottomAppBarItem(Icons.account_balance_wallet, 'Account', () {
             Navigator.pushAndRemoveUntil(
